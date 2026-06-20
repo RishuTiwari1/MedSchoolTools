@@ -1,32 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="MedTools">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedSchoolTools</title>
     
+    <!-- PWA Manifest Configuration Links -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0ea5e9">
+    
+    <!-- Forces iOS standalone web shells into full screen immersion mode -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <!-- Tailwind CSS for clean, rapid design styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-/* Glint Shimmer Keyframe Animation */
-@keyframes glint {
-    0% { transform: translateX(-150%) rotate(45deg); }
-    100% { transform: translateX(150%) rotate(45deg); }
-}
-.glint-overlay::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 200%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
-    transform: translateX(-150%) rotate(45deg);
-    animation: glint 2s infinite ease-in-out;
-}
-
-        
         /* Modern, ultra-smooth gaming dashboard physics */
         .carousel-container {
             perspective: 1200px;
@@ -97,6 +90,20 @@
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        /* Glint Shimmer Keyframe Animation */
+        @keyframes glint {
+            0% { transform: translateX(-150%) rotate(45deg); }
+            100% { transform: translateX(150%) rotate(45deg); }
+        }
+        .glint-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 200%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
+            transform: translateX(-150%) rotate(45deg);
+            animation: glint 2s infinite ease-in-out;
+        }
+
         /* Responsive scaling tweaks for smaller viewpoints */
         @media (max-width: 640px) {
             .carousel-card.left-1 { transform: translateX(-120px) scale(0.75) rotateY(30deg); }
@@ -104,6 +111,7 @@
         }
     </style>
     
+    <!-- Service Worker Background Thread Initialization Script -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -116,8 +124,10 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100">
 
+    <!-- Attention Notice Overlay Modal -->
     <div id="attentionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-100">
         <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-100">
+            <!-- Animated Laboratory/Testing Pulse Icon -->
             <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative">
                 <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 relative">
@@ -125,38 +135,55 @@
                 </svg>
             </div>
             
+            <!-- Alert Text Details -->
             <h2 class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">Welcome!</h2>
             <p class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">
-                The App is Currently In Testing Phase, Open to All. <br> Optimized for Tablets & PC.<br>
+                The App is Currently In Testing Phase, Open to All.<br>
                 <span class="text-emerald-600 font-bold">No Payments Required.</span>
             </p>
             
+            <!-- Okay Dismiss Button -->
             <button id="closeModalBtn" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm hover:shadow-md transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-500">
                 Acknowledge & Enter
             </button>
         </div>
     </div>
 
+    <!-- Top Header Layout -->
     <header class="pt-12 pb-4 text-center">
         <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent inline-block">
             MedSchoolTools
         </h1>
         <p class="text-xs text-slate-400 mt-2 font-bold tracking-widest uppercase px-4">INTERACTIVE MEDICAL EDUCATION SUITE BY RISHU TIWARI</p>
+        
+        <!-- Manual PWA Installation Trigger Button (Hidden by Default) -->
+        <div class="mt-4 flex justify-center">
+            <button id="manualInstallBtn" class="hidden items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md hover:shadow-sky-400/30 transition-all duration-200 cursor-pointer focus:outline-none active:scale-95">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                Install App
+            </button>
+        </div>
     </header>
 
+    <!-- Interactive Carousel Showcase Section -->
     <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
         
         <div class="relative w-full flex items-center justify-between py-6">
             
-            <button id="prevBtn" class="absolute left-2 md:left-10 z-40 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/50 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
+            <!-- Left Arrow Button with Enhanced Fluid Ambient Glow -->
+            <button id="prevBtn" class="absolute left-2 md:left-10 z-40 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
             </button>
 
+            <!-- Main Aurora Tracking Frame -->
             <div class="carousel-container w-full overflow-hidden py-10">
                 <div id="carouselTrack" class="carousel-track">
                     
+                    <!-- CARD 1: Darrow Yannet Simulator -->
                     <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-14 h-14 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 mb-4 border border-sky-100/70">
@@ -170,6 +197,7 @@
                         <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                     </div>
 
+                    <!-- CARD 2: Neural Gaze Lesion Simulator -->
                     <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
@@ -181,9 +209,10 @@
                             <h3 class="text-xl font-bold text-slate-800 tracking-tight">Neural Gaze Lesion Simulator</h3>
                             <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Map complex brainstem and cortical lesions visually by examining abnormal oculomotor nerve eye pathways.</p>
                         </div>
-                        <a href="neurogazes.html" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                     </div>
 
+                    <!-- CARD 3: ImmuneCheck Breakers! -->
                     <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
@@ -197,6 +226,7 @@
                         <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                     </div>
 
+                    <!-- CARD 4: Sarcomere Simulator -->
                     <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
@@ -210,6 +240,7 @@
                         <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                     </div>
 
+                    <!-- CARD 5: Blood Flow Simulator -->
                     <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
@@ -220,9 +251,10 @@
                             <h3 class="text-xl font-bold text-slate-800 tracking-tight">Blood Flow Simulator</h3>
                             <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Analyze resistance, vessel radius adjustments, and pressure gradients with real-time hemodynamic formulas.</p>
                         </div>
-                        <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        <a href="bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                     </div>
 
+                    <!-- CARD 6: Blank Placeholder Template -->
                     <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                         <div class="flex flex-col items-center text-center">
                             <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
@@ -230,8 +262,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-400 tracking-tight">In Development</h3>
-                            <p class="text-sm text-slate-400 mt-2.5 leading-relaxed line-clamp-3">😁</p>
+                            <h3 class="text-xl font-bold text-slate-400 tracking-tight">In Development<h3>
+                            <p class="text-sm text-slate-400 mt-2.5 leading-relaxed line-clamp-3"></p>
                         </div>
                         <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">In Development</a>
                     </div>
@@ -239,7 +271,8 @@
                 </div>
             </div>
 
-            <button id="nextBtn" class="absolute right-2 md:right-10 z-40 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/50 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
+            <!-- Right Arrow Button with Enhanced Fluid Ambient Glow -->
+            <button id="nextBtn" class="absolute right-2 md:right-10 z-40 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
@@ -247,15 +280,18 @@
 
         </div>
 
+        <!-- Custom Active State Tracking Dots -->
         <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
     </main>
 
+    <!-- Modern Styled Professional Footer Notification -->
     <footer class="py-8 text-center border-t border-slate-200 bg-white/60 backdrop-blur-md">
         <p class="text-[11px] tracking-widest text-slate-400 font-bold uppercase">
             &copy; 2026 MedSchoolTools. All Rights Reserved by <span class="text-slate-700 font-extrabold transition-colors hover:text-sky-600">Rishu Tiwari</span>.
         </p>
     </footer>
 
+    <!-- Operational Controllers Logic -->
     <script>
         const track = document.getElementById('carouselTrack');
         const prevBtn = document.getElementById('prevBtn');
@@ -265,19 +301,110 @@
         // Modal Selectors
         const attentionModal = document.getElementById('attentionModal');
         const modalBox = document.getElementById('modalBox');
-        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalButton = document.getElementById('closeModalBtn');
+        const modalTitle = document.querySelector('#attentionModal h2');
+        const modalText = document.querySelector('#attentionModal p');
+        const manualInstallBtn = document.getElementById('manualInstallBtn');
 
         let cards = Array.from(track.children);
         let currentIndex = 0;
 
-        // Dismiss Modal Action with Smooth Easing Mechanics
-        closeModalBtn.addEventListener('click', () => {
+        // Detect if the user arrived via the fast-track URL shortcut
+        const urlParams = new URLSearchParams(window.location.search);
+        const isFastTrack = urlParams.get('source') === 'fasttrack';
+        let deferredPrompt;
+
+        // Listen for browser ready parameters
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            if (manualInstallBtn) {
+                manualInstallBtn.classList.remove('hidden');
+                manualInstallBtn.classList.add('inline-flex');
+            }
+
+            if (isFastTrack) {
+                modalTitle.innerText = "Install MedSchoolTools Suite";
+                modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";
+                
+                modalText.innerHTML = `
+                    Get instant, one-tap access to your high-yield clinical simulators directly from your home screen.<br>
+                    <span class="text-slate-500 text-xs mt-2 block">⚡ Zero Storage Footprint • Full Screen Immersion • No Payments Required</span>
+                `;
+
+                modalButton.innerText = "✨ Install Native App Shell";
+                modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-50 hover:to-indigo-50 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";
+            }
+        });
+
+        // Combined Trigger Logic for the Modal Call-To-Action Button
+        modalButton.addEventListener('click', async () => {
+            if (isFastTrack && deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    deferredPrompt = null;
+                    
+                    // Freeze into background blur lockscreen
+                    attentionModal.style.display = 'flex';
+                    attentionModal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl opacity-100 transition-all duration-500";
+                    modalBox.className = "w-full max-w-sm bg-white/90 border border-sky-400 p-8 text-center shadow-2xl rounded-2xl relative overflow-hidden glint-overlay scale-100 transition-all duration-300";
+                    
+                    const iconContainer = modalBox.querySelector('.mx-auto');
+                    if (iconContainer) {
+                        iconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-500 mb-5 border border-sky-200 relative animate-bounce";
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 animate-spin">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        `;
+                    }
+
+                    modalTitle.innerText = "Installing Application...";
+                    modalTitle.className = "text-xl font-black text-slate-900 tracking-tight mb-2";
+                    
+                    modalText.innerHTML = `
+                        Please check your home screen or application drawer for <b class="text-sky-600 font-extrabold text-base">"MedTools"</b>.<br>
+                        <span class="text-slate-500 text-xs mt-3 block font-semibold">Exit this browser window to start using your full-screen standalone suite layout instantly.</span>
+                    `;
+
+                    modalButton.remove();
+                    if (prevBtn) prevBtn.remove();
+                    if (nextBtn) nextBtn.remove();
+                    if (manualInstallBtn) manualInstallBtn.remove();
+                    return; // Lock execution thread here safely
+                }
+                deferredPrompt = null;
+            }
+
+            // Normal Window Dimissal Flow
             modalBox.classList.add('scale-95');
             attentionModal.classList.replace('opacity-100', 'opacity-0');
-            
             setTimeout(() => {
                 attentionModal.style.display = 'none';
-            }, 400); // Matches the 0.4s transition duration
+            }, 400);
+        });
+
+        // Backup Listener for Header Install Button Frame
+        if (manualInstallBtn) {
+            manualInstallBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                manualInstallBtn.classList.remove('inline-flex');
+                manualInstallBtn.classList.add('hidden');
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            if (manualInstallBtn) {
+                manualInstallBtn.classList.remove('inline-flex');
+                manualInstallBtn.classList.add('hidden');
+            }
+            deferredPrompt = null;
         });
 
         // Construct interactive status dots
@@ -302,7 +429,6 @@
 
             cards.forEach((card, i) => {
                 card.classList.remove('active', 'left-1', 'right-1', 'left-2', 'right-2');
-                
                 let offset = i - currentIndex;
                 
                 if (offset < -2) offset += total;
@@ -347,153 +473,8 @@
             updateCarousel();
         });
 
-
-        
-
         buildPagination();
         updateCarousel();
-            // --- PWA Manual Installation & Fast-Track UI Controller ---
-let deferredPrompt;
-const manualInstallBtn = document.getElementById('manualInstallBtn');
-const modalTitle = document.querySelector('#attentionModal h2');
-const modalText = document.querySelector('#attentionModal p');
-const modalButton = document.getElementById('closeModalBtn');
-
-// Detect if the user arrived via the fast-track URL shortcut
-const urlParams = new URLSearchParams(window.location.search);
-const isFastTrack = urlParams.get('source') === 'fasttrack';
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the default browser mini-infobar prompt
-    e.preventDefault();
-    // Stash the event parameters so it can be triggered manually later
-    deferredPrompt = e;
-    
-    // Unhide the manual installation button in the header structure
-    if (manualInstallBtn) {
-        manualInstallBtn.classList.remove('hidden');
-        manualInstallBtn.classList.add('inline-flex');
-    }
-
-    // Dynamic High-Conversion UI Overhaul for Fast-Track Visitors
-    if (isFastTrack) {
-        // Upgrade Title & Body to a high-yield call to action
-        modalTitle.innerText = "Install MedSchoolTools Suite";
-        modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";
-        
-        modalText.innerHTML = `
-            Get MedTools directly on your home screen.<br>
-            <span class="text-slate-500 text-xs mt-2 block"></span>
-        `;
-
-        // Transform the standard modal button into a premium, pulsing "Install Now" target
-        modalButton.innerText = "Press to Install";
-        modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";
-    }
-});
-
-// Primary Trigger Logic for the Modal Call-To-Action Button
-modalButton.addEventListener('click', async () => {
-    // If arriving via fast-track and the browser app shell is ready to install, intercept the click
-    if (isFastTrack && deferredPrompt) {
-        // Present the native platform installation dialog action frame instantly
-        deferredPrompt.prompt();
-        
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User installation choice outcome: ${outcome}`);
-        
-        deferredPrompt = null;
-        if (manualInstallBtn) {
-            manualInstallBtn.classList.remove('inline-flex');
-            manualInstallBtn.classList.add('hidden');
-        }
-    }
-
-    // Smoothly dismiss the glassmorphism blur overlay to reveal the main console track
-    const attentionModal = document.getElementById('attentionModal');
-    const modalBox = document.getElementById('modalBox');
-    
-    modalBox.classList.add('scale-95');
-    attentionModal.classList.replace('opacity-100', 'opacity-0');
-    
-    setTimeout(() => {
-        attentionModal.style.display = 'none';
-    }, 400);
-});
-
-// Fallback listener for header installation button framework
-if (manualInstallBtn) {
-    manualInstallBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        manualInstallBtn.classList.remove('inline-flex');
-        manualInstallBtn.classList.add('hidden');
-    });
-}
-
-// Clean cleanup layout configurations upon completion
-window.addEventListener('appinstalled', (logEvent) => {
-    console.log('MedSchoolTools successfully compiled onto desktop standard workspace footprint.', logEvent);
-    if (manualInstallBtn) {
-        manualInstallBtn.classList.remove('inline-flex');
-        manualInstallBtn.classList.add('hidden');
-    }
-    deferredPrompt = null;
-});
-  // --- Post-Installation UI Interceptor & Lockscreen ---
-modalButton.addEventListener('click', async () => {
-    if (isFastTrack && deferredPrompt) {
-        deferredPrompt.prompt();
-        
-        const { outcome } = await deferredPrompt.userChoice;
-        
-        if (outcome === 'accepted') {
-            // User agreed to install! Lock the screen so they don't stay in Chrome
-            deferredPrompt = null;
-            
-            // 1. Keep/Force background blur and change background styling safely
-            attentionModal.style.display = 'flex';
-            attentionModal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl opacity-100 transition-all duration-500";
-            
-            // 2. Transform the modal box into a sleek, glowing tracking card with a glint effect
-            modalBox.className = "w-full max-w-sm bg-white/90 border border-sky-400 p-8 text-center shadow-2xl rounded-2xl relative overflow-hidden glint-overlay scale-100 transition-all duration-300";
-            
-            // 3. Swap out icon to an active syncing loop animation
-            const iconContainer = modalBox.querySelector('.mx-auto');
-            iconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-500 mb-5 border border-sky-200 relative animate-bounce";
-            iconContainer.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 animate-spin">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                </svg>
-            `;
-
-            // 4. Set highly visible, descriptive text instruction set
-            modalTitle.innerText = "Installing Application...";
-            modalTitle.className = "text-xl font-black text-slate-900 tracking-tight mb-2";
-            
-            modalText.innerHTML = `
-                Please check your home screen or application drawer for <b class="text-sky-600 font-extrabold text-base">"MedTools"</b>.<br>
-                <span class="text-slate-500 text-xs mt-3 block font-semibold">Exit this browser window to start using your full-screen standalone suite layout instantly.</span>
-            `;
-
-            // 5. Permanently strip away the dismiss button layout to avoid lingering click loops
-            modalButton.remove();
-            
-            // 6. Hard-lock standard carousel slider buttons from background interaction layers
-            if (prevBtn) prevBtn.remove();
-            if (nextBtn) nextBtn.remove();
-            return; // Halt standard execution to freeze the display state beautifully
-        }
-        
-        deferredPrompt = null;
-    }
-});
-      
     </script>
-    
-
-
 </body>
 </html>
