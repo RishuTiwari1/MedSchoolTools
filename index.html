@@ -12,6 +12,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+/* Glint Shimmer Keyframe Animation */
+@keyframes glint {
+    0% { transform: translateX(-150%) rotate(45deg); }
+    100% { transform: translateX(150%) rotate(45deg); }
+}
+.glint-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 200%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
+    transform: translateX(-150%) rotate(45deg);
+    animation: glint 2s infinite ease-in-out;
+}
+
+        
         /* Modern, ultra-smooth gaming dashboard physics */
         .carousel-container {
             perspective: 1200px;
