@@ -3,19 +3,24 @@
   "short_name": "MedTools",
   "description": "Interactive Medical Education Suite by Rishu Tiwari",
   "start_url": "./index.html",
-  "display": "standalone",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait-primary",
   "background_color": "#f8fafc",
   "theme_color": "#0ea5e9",
-
+  "categories": ["education", "medical"],
   "icons": [
     {
       "src": "logo.png",
       "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
-
-  
-
 }
