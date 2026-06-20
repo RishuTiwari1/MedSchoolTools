@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poiseuille's Law: Hemodynamics Simulator</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --panel-bg: #ffffff;
+            --text-main: #2c3e50;
+            --accent: #e74c3c;
+            --accent-hover: #c0392b;
+            --vessel-wall: #e67e22;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 { margin-top: 0; color: #1a252f; }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .simulation-area {
+            flex: 2;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            background: #fff0f0;
+            border-radius: 8px;
+            border: 2px solid #fadbd8;
+            max-width: 100%;
+        }
+        .controls {
+            flex: 1;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            min-width: 300px;
+        }
+        .control-group { margin-bottom: 20px; }
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+        .stats-panel {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .stats-panel h3 { margin: 0 0 10px 0; color: #ecf0f1; }
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f4f8;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .formula {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 15px 0;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hemodynamics Simulator: Poiseuille's Law</h1>
+    
+    <div class="container">
+        <div class="simulation-area">
+            <div class="formula">Q = (π · ΔP · r⁴) / (8 · η · L)</div>
+            <canvas id="vesselCanvas" width="600" height="300"></canvas>
+            
+            <div class="stats-panel">
+                <h3>Real-Time Hemodynamics</h3>
+                <div>Relative Flow Rate (Q): <span class="stat-value" id="flowVal">1.00</span>x</div>
+                <div>Relative Velocity (v): <span class="stat-value" style="color:#3498db;" id="velVal">1.00</span>x</div>
+            </div>
+
+            <div class="explanation" id="physiologyText">
+                Baseline physiological state. Adjust the parameters to observe changes in blood flow and velocity.
+            </div>
+        </div>
+
+        <div class="controls">
+            <h3>Parameters</h3>
+            
+            <div class="control-group">
+                <label>Vessel Radius (r) <span id="rDisplay">1.0x</span></label>
+                <input type="range" id="radius" min="0.5" max="2.0" step="0.1" value="1.0">
+                <small>Simulates Vasodilation / Vasoconstriction</small>
+            </div>
+
+            <div class="control-group">
+                <label>Pressure Gradient (ΔP) <span id="pDisplay">1.0x</span></label>
+                <input type="range" id="pressure" min="0.5" max="3.0" step="0.1" value="1.0">
+                <small>Simulates MAP / Cardiac Output changes</small>
+            </div>
+
+            <div class="control-group">
+                <label>Blood Viscosity (η) <span id="vDisplay">1.0x</span></label>
+                <input type="range" id="viscosity" min="0.5" max="2.0" step="0.1" value="1.0">
+                <small>Simulates Anemia (low) vs Polycythemia (high)</small>
+            </div>
+
+            <div class="control-group">
+                <label>Vessel Length (L) <span id="lDisplay">1.0x</span></label>
+                <input type="range" id="length" min="0.5" max="2.0" step="0.1" value="1.0">
+                <small>Impacts total peripheral resistance</small>
+            </div>
+            
+            <button onclick="resetSliders()" style="padding:10px 15px; background:#e74c3c; color:white; border:none; border-radius:5px; cursor:pointer; width:100%;">Reset to Baseline</button>
+        </div>
+    </div>
+
+
+    <script>
+        const canvas = document.getElementById('vesselCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // UI Elements
+        const sliders = {
+            r: document.getElementById('radius'),
+            p: document.getElementById('pressure'),
+            v: document.getElementById('viscosity'),
+            l: document.getElementById('length')
+        };
+        const displays = {
+            r: document.getElementById('rDisplay'),
+            p: document.getElementById('pDisplay'),
+            v: document.getElementById('vDisplay'),
+            l: document.getElementById('lDisplay')
+        };
+        const flowVal = document.getElementById('flowVal');
+        const velVal = document.getElementById('velVal');
+        const physioText = document.getElementById('physiologyText');
+
+        // Simulation State
+        let particles = [];
+        const baseRadius = 60; // Pixels
+        const maxParticles = 300; // Bead count for visuals
+
+        class Particle {
+            constructor() {
+                this.reset(true);
+            }
+            reset(randomX = false) {
+                let currentR = parseFloat(sliders.r.value);
+                let currentL = parseFloat(sliders.l.value);
+                
+                // Spawn inside the current vessel bounds
+                let tubeRadius = baseRadius * currentR;
+                let centerY = canvas.height / 2;
+                
+                // Distribute particles across the cross-section
+                this.y = centerY + (Math.random() * 2 - 1) * (tubeRadius - 5);
+                this.x = randomX ? Math.random() * canvas.width : -10;
+                
+                // Color variation to look like RBCs
+                let shade = 100 + Math.random() * 50;
+                this.color = `rgba(${shade}, 0, 0, ${0.7 + Math.random()*0.3})`;
+                this.size = 2 + Math.random() * 3;
+            }
+            update(velocity) {
+                // Parabolic flow profile (fastest in center, slower at edges)
+                let currentR = parseFloat(sliders.r.value);
+                let tubeRadius = baseRadius * currentR;
+                let centerY = canvas.height / 2;
+                let distFromCenter = Math.abs(this.y - centerY);
+                
+                // Laminar flow factor: 1 at center, approaching 0 at edges
+                let laminarFactor = 1 - Math.pow(distFromCenter / tubeRadius, 2);
+                if(laminarFactor < 0.1) laminarFactor = 0.1; // prevent sticking to walls completely
+                
+                this.x += velocity * laminarFactor * 3; // multiplier for visual speed
+                
+                if (this.x > canvas.width) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function updateSimulation() {
+            let r = parseFloat(sliders.r.value);
+            let p = parseFloat(sliders.p.value);
+            let v = parseFloat(sliders.v.value);
+            let l = parseFloat(sliders.l.value);
+
+            // Update Displays
+            displays.r.innerText = r.toFixed(1) + 'x';
+            displays.p.innerText = p.toFixed(1) + 'x';
+            displays.v.innerText = v.toFixed(1) + 'x';
+            displays.l.innerText = l.toFixed(1) + 'x';
+
+            // Poiseuille's Math
+            // Q = (P * r^4) / (v * L)
+            let flow = (p * Math.pow(r, 4)) / (v * l);
+            // Velocity = Q / Area = Q / r^2
+            let velocity = flow / Math.pow(r, 2);
+
+            flowVal.innerText = flow.toFixed(2);
+            velVal.innerText = velocity.toFixed(2);
+
+            updatePhysiologyText(r, p, v, l, flow);
+
+            return { r, velocity, l };
+        }
+
+        function updatePhysiologyText(r, p, v, l, flow) {
+            let text = "<b>Physiological Action:</b> ";
+            if (r > 1.2) {
+                text += "<b>Vasodilation</b> is occurring. Notice how dramatically the flow increases! Because flow is proportional to the <b>fourth power of the radius (r⁴)</b>, a small widening of the vessel massively drops resistance, allowing high perfusion even without extra pressure.";
+            } else if (r < 0.8) {
+                text += "<b>Vasoconstriction</b> is occurring. The radius has decreased, causing a severe spike in resistance (proportional to 1/r⁴). To maintain the same baseline flow now, the body would need a massive compensatory increase in pressure (ΔP).";
+            } else if (v > 1.2) {
+                text += "<b>Hyperviscosity</b> (e.g., polycythemia or dehydration). The thicker blood increases resistance (η), causing flow to slow down sluggishly.";
+            } else if (p > 1.2) {
+                text += "Increased <b>Pressure Gradient (ΔP)</b>. This directly pushes more flow through, but relies heavily on the heart working harder to generate that pressure.";
+            } else {
+                text += "Baseline resting state. Flow is smooth, laminar, and balanced.";
+            }
+            physioText.innerHTML = text;
+        }
+
+        function drawVesselWalls(r) {
+            let tubeRadius = baseRadius * r;
+            let centerY = canvas.height / 2;
+            
+            ctx.fillStyle = '#fce4e4';
+            ctx.fillRect(0, centerY - tubeRadius, canvas.width, tubeRadius * 2);
+            
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = '#e74c3c';
+            
+            // Top wall
+            ctx.beginPath();
+            ctx.moveTo(0, centerY - tubeRadius);
+            ctx.lineTo(canvas.width, centerY - tubeRadius);
+            ctx.stroke();
+            
+            // Bottom wall
+            ctx.beginPath();
+            ctx.moveTo(0, centerY + tubeRadius);
+            ctx.lineTo(canvas.width, centerY + tubeRadius);
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            let { r, velocity, l } = updateSimulation();
+            
+            drawVesselWalls(r);
+            
+            particles.forEach(p => {
+                p.update(velocity);
+                p.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+
+        function resetSliders() {
+            sliders.r.value = 1.0;
+            sliders.p.value = 1.0;
+            sliders.v.value = 1.0;
+            sliders.l.value = 1.0;
+            initParticles();
+        }
+
+        // Add event listeners to redraw particles if radius changes drastically to prevent them sticking outside the tube
+        sliders.r.addEventListener('input', () => {
+             particles.forEach(p => {
+                 let tubeRadius = baseRadius * parseFloat(sliders.r.value);
+                 let centerY = canvas.height / 2;
+                 if(Math.abs(p.y - centerY) > tubeRadius) p.reset();
+             });
+        });
+
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
