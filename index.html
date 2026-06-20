@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSchoolTools</title>
+    <!-- Tailwind CSS for clean, rapid design styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Modern, ultra-smooth gaming dashboard physics */
+        .carousel-container {
+            perspective: 1200px;
+        }
+        .carousel-track {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 360px;
+            transform-style: preserve-3d;
+        }
+        .carousel-card {
+            position: absolute;
+            /* Premium cubic-bezier curve for snappy, console-like kinetic transitions */
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        opacity 0.5s ease, 
+                        box-shadow 0.5s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* [Active Center State] */
+        .carousel-card.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0) scale(1.05) translateZ(50px) rotateY(0deg);
+            z-index: 40;
+            box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.25);
+        }
+        
+        /* [Left Adjacent State] */
+        .carousel-card.left-1 {
+            opacity: 0.65;
+            pointer-events: auto;
+            transform: translateX(-240px) scale(0.85) translateZ(0) rotateY(28deg);
+            z-index: 30;
+        }
+        
+        /* [Right Adjacent State] */
+        .carousel-card.right-1 {
+            opacity: 0.65;
+            pointer-events: auto;
+            transform: translateX(240px) scale(0.85) translateZ(0) rotateY(-28deg);
+            z-index: 30;
+        }
+        
+        /* [Far Left Hidden Stack] */
+        .carousel-card.left-2 {
+            opacity: 0;
+            transform: translateX(-400px) scale(0.6) translateZ(-100px) rotateY(45deg);
+            z-index: 20;
+        }
+        
+        /* [Far Right Hidden Stack] */
+        .carousel-card.right-2 {
+            opacity: 0;
+            transform: translateX(400px) scale(0.6) translateZ(-100px) rotateY(-45deg);
+            z-index: 20;
+        }
+
+        /* Responsive scaling tweaks for smaller viewpoints */
+        @media (max-width: 640px) {
+            .carousel-card.left-1 { transform: translateX(-120px) scale(0.75) rotateY(30deg); }
+            .carousel-card.right-1 { transform: translateX(120px) scale(0.75) rotateY(-30deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100">
+
+    <!-- Top Header Layout -->
+    <header class="pt-12 pb-4 text-center">
+        <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent inline-block">
+            MedSchoolTools
+        </h1>
+        <p class="text-xs text-slate-400 mt-2 font-bold tracking-widest uppercase">Interactive Medical Education Suite</p>
+    </header>
+
+    <!-- Interactive Carousel Showcase Section -->
+    <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
+        
+        <div class="relative w-full flex items-center justify-between py-6">
+            
+            <!-- Left Arrow Button with Enhanced Fluid Ambient Glow -->
+            <button id="prevBtn" class="absolute left-2 md:left-10 z-50 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/50 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+
+            <!-- Main Aurora Tracking Frame -->
+            <div class="carousel-container w-full overflow-hidden py-10">
+                <div id="carouselTrack" class="carousel-track">
+                    
+                    <!-- CARD 1: Darrow Yannet Simulator -->
+                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 mb-4 border border-sky-100/70">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" />
+                                </svg>
+                            </div>
+                            <!--<!INSERT TITLE HERE>-->
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Darrow Yannet Simulator</h3>
+                            <!--<!INSERT DESCRIPTION>-->
+                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Simulate and practice how shifting fluid and electrolyte balance impacts clinical fluid compartments.</p>
+                        </div>
+                        <!--<!INSERT LINK>-->
+                        <a href="https://rishutiwari1.github.io/BodyVolumes-/"" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch Tool</a>
+                    </div>
+
+                    <!-- CARD 2: Neural Gaze Lesion Simulator -->
+                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                            </div>
+                            <!--<!INSERT TITLE HERE>-->
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Neural Gaze Lesion Simulator</h3>
+                            <!--<!INSERT DESCRIPTION>-->
+                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Map complex brainstem and cortical lesions visually by examining abnormal oculomotor nerve eye pathways.</p>
+                        </div>
+                        <!--<!INSERT LINK>-->
+                        <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch Tool</a>
+                    </div>
+
+                    <!-- CARD 3: ImmuneCheck Breakers! -->
+                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286z" />
+                                </svg>
+                            </div>
+                            <!--<!INSERT TITLE HERE>-->
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">ImmuneCheck Breakers!</h3>
+                            <!--<!INSERT DESCRIPTION>-->
+                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Master pharmacology inhibitors by dissecting monoclonal antibody targeting blocks in immunology pathways.</p>
+                        </div>
+                        <!--<!INSERT LINK>-->
+                        <a href="https://rishutiwari1.github.io/ImmuneBreakers/"" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch Tool</a>
+                    </div>
+
+                    <!-- CARD 4: Sarcomere Simulator -->
+                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                </svg>
+                            </div>
+                            <!--<!INSERT TITLE HERE>-->
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Sarcomere Simulator</h3>
+                            <!--<!INSERT DESCRIPTION>-->
+                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Interact directly with actin and myosin filament cross-bridge binding sequences during muscle contraction.</p>
+                        </div>
+                        <!--<!INSERT LINK>-->
+                        <a href="#PLACEHOLDER_LINK_4" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch Tool</a>
+                    </div>
+
+                    <!-- CARD 5: Blood Flow Simulator -->
+                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.75 12h14.5M12 4.75v14.5" />
+                                </svg>
+                            </div>
+                            <!--<!INSERT TITLE HERE>-->
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Blood Flow Simulator</h3>
+                            <!--<!INSERT DESCRIPTION>-->
+                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Analyze resistance, vessel radius adjustments, and pressure gradients with real-time hemodynamic formulas.</p>
+                        </div>
+                        <!--<!INSERT LINK>-->
+                        <a href="#PLACEHOLDER_LINK_5" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch Tool</a>
+                    </div>
+
+                    <!-- CARD 6: Blank Placeholder Template -->
+                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <!--<!INSERT TITLE HERE>-->
+                            <h3 class="text-xl font-bold text-slate-400 tracking-tight">In Development</h3>
+                            <!--<!INSERT DESCRIPTION>-->
+                            <p class="text-sm text-slate-400 mt-2.5 leading-relaxed line-clamp-3">.</p>
+                        </div>
+                        <!--<!INSERT LINK>-->
+                        <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">In Development</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Right Arrow Button with Enhanced Fluid Ambient Glow -->
+            <button id="nextBtn" class="absolute right-2 md:right-10 z-50 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/50 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
+
+        </div>
+
+        <!-- Custom Active State Tracking Dots -->
+        <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
+    </main>
+
+    <!-- Modern Styled Professional Footer Notification -->
+    <footer class="py-8 text-center border-t border-slate-200 bg-white/60 backdrop-blur-md">
+        <p class="text-[11px] tracking-widest text-slate-400 font-bold uppercase">
+            &copy; 2026 MedSchoolTools. All Rights Reserved by <span class="text-slate-700 font-extrabold transition-colors hover:text-sky-600">Rishu Tiwari</span>.
+        </p>
+    </footer>
+
+    <!-- Carousel Operational Controller Logic -->
+    <script>
+        const track = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('paginationDots');
+        
+        let cards = Array.from(track.children);
+        let currentIndex = 0;
+
+        // Construct interactive status dots
+        function buildPagination() {
+            dotsContainer.innerHTML = '';
+            cards.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.className = `h-2 rounded-full transition-all duration-500 cursor-pointer ${index === currentIndex ? 'w-8 bg-sky-500' : 'w-2 bg-slate-300 hover:bg-slate-400'}`;
+                dot.setAttribute('aria-label', `Go to app slide ${index + 1}`);
+                dot.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCarousel();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        // Apply cyclical position mapping metrics
+        function updateCarousel() {
+            cards = Array.from(track.children); 
+            const total = cards.length;
+
+            cards.forEach((card, i) => {
+                // Wipe positioning flags to avoid hardware translation collision loops
+                card.classList.remove('active', 'left-1', 'right-1', 'left-2', 'right-2');
+                
+                let offset = i - currentIndex;
+                
+                // Keep structural sequence loop boundaries consistent
+                if (offset < -2) offset += total;
+                if (offset > 2) offset -= total;
+
+                // Handle extreme edge wrap-arounds safely for standard rendering sets
+                if (total > 4) {
+                    if (currentIndex === 0 && i === total - 1) offset = -1;
+                    if (currentIndex === 0 && i === total - 2) offset = -2;
+                    if (currentIndex === total - 1 && i === 0) offset = 1;
+                    if (currentIndex === total - 1 && i === 1) offset = 2;
+                }
+
+                // Explicit layout deployment classes mapping
+                if (offset === 0) {
+                    card.classList.add('active');
+                } else if (offset === 1) {
+                    card.classList.add('right-1');
+                } else if (offset === -1) {
+                    card.classList.add('left-1');
+                } else if (offset === 2) {
+                    card.classList.add('right-2');
+                } else if (offset === -2) {
+                    card.classList.add('left-2');
+                }
+            });
+
+            // Refresh the navigation dot scaling layout
+            Array.from(dotsContainer.children).forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.className = 'h-2 w-7 bg-sky-500 rounded-full transition-all duration-500 shadow-sm';
+                } else {
+                    dot.className = 'h-2 w-2 bg-slate-200 hover:bg-slate-400 rounded-full transition-all duration-500';
+                }
+            });
+        }
+
+        // Navigation Action Event Attachments
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            updateCarousel();
+        });
+
+        // Initialize presentation stack rendering parameters
+        buildPagination();
+        updateCarousel();
+    </script>
+</body>
+</html>
