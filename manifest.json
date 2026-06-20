@@ -1,0 +1,17 @@
+{
+  "name": "MedSchoolTools",
+  "short_name": "MedTools",
+  "description": "Interactive Medical Education Suite by Rishu Tiwari",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3004/3004458.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
