@@ -332,8 +332,102 @@
             updateCarousel();
         });
 
+
+        
+
         buildPagination();
         updateCarousel();
     </script>
+    // --- PWA Manual Installation & Fast-Track UI Controller ---
+let deferredPrompt;
+const manualInstallBtn = document.getElementById('manualInstallBtn');
+const modalTitle = document.querySelector('#attentionModal h2');
+const modalText = document.querySelector('#attentionModal p');
+const modalButton = document.getElementById('closeModalBtn');
+
+// Detect if the user arrived via the fast-track URL shortcut
+const urlParams = new URLSearchParams(window.location.search);
+const isFastTrack = urlParams.get('source') === 'fasttrack';
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the default browser mini-infobar prompt
+    e.preventDefault();
+    // Stash the event parameters so it can be triggered manually later
+    deferredPrompt = e;
+    
+    // Unhide the manual installation button in the header structure
+    if (manualInstallBtn) {
+        manualInstallBtn.classList.remove('hidden');
+        manualInstallBtn.classList.add('inline-flex');
+    }
+
+    // Dynamic High-Conversion UI Overhaul for Fast-Track Visitors
+    if (isFastTrack) {
+        // Upgrade Title & Body to a high-yield call to action
+        modalTitle.innerText = "Install MedSchoolTools Suite";
+        modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";
+        
+        modalText.innerHTML = `
+            Get instant, one-tap access to your high-yield clinical simulators directly from your home screen.<br>
+            <span class="text-slate-500 text-xs mt-2 block">⚡ Zero Storage Footprint • Full Screen Immersion • No Payments Required</span>
+        `;
+
+        // Transform the standard modal button into a premium, pulsing "Install Now" target
+        modalButton.innerText = "✨ Install App";
+        modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";
+    }
+});
+
+// Primary Trigger Logic for the Modal Call-To-Action Button
+modalButton.addEventListener('click', async () => {
+    // If arriving via fast-track and the browser app shell is ready to install, intercept the click
+    if (isFastTrack && deferredPrompt) {
+        // Present the native platform installation dialog action frame instantly
+        deferredPrompt.prompt();
+        
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User installation choice outcome: ${outcome}`);
+        
+        deferredPrompt = null;
+        if (manualInstallBtn) {
+            manualInstallBtn.classList.remove('inline-flex');
+            manualInstallBtn.classList.add('hidden');
+        }
+    }
+
+    // Smoothly dismiss the glassmorphism blur overlay to reveal the main console track
+    const attentionModal = document.getElementById('attentionModal');
+    const modalBox = document.getElementById('modalBox');
+    
+    modalBox.classList.add('scale-95');
+    attentionModal.classList.replace('opacity-100', 'opacity-0');
+    
+    setTimeout(() => {
+        attentionModal.style.display = 'none';
+    }, 400);
+});
+
+// Fallback listener for header installation button framework
+if (manualInstallBtn) {
+    manualInstallBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        manualInstallBtn.classList.remove('inline-flex');
+        manualInstallBtn.classList.add('hidden');
+    });
+}
+
+// Clean cleanup layout configurations upon completion
+window.addEventListener('appinstalled', (logEvent) => {
+    console.log('MedSchoolTools successfully compiled onto desktop standard workspace footprint.', logEvent);
+    if (manualInstallBtn) {
+        manualInstallBtn.classList.remove('inline-flex');
+        manualInstallBtn.classList.add('hidden');
+    }
+    deferredPrompt = null;
+});
+
 </body>
 </html>
