@@ -367,12 +367,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
         modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";
         
         modalText.innerHTML = `
-            Get instant, one-tap access to your high-yield clinical simulators directly from your home screen.<br>
-            <span class="text-slate-500 text-xs mt-2 block">⚡ Zero Storage Footprint • Full Screen Immersion • No Payments Required</span>
+            Get MedTools directly on your home screen.<br>
+            <span class="text-slate-500 text-xs mt-2 block"></span>
         `;
 
         // Transform the standard modal button into a premium, pulsing "Install Now" target
-        modalButton.innerText = "✨ Install App";
+        modalButton.innerText = "Press to Install";
         modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";
     }
 });
