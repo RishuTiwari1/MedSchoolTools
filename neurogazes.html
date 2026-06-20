@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guided Neural Gaze Simulator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #2d3436;
+            --panel-bg: #ffffff;
+            --border-color: #dfe6e9;
+            --btn-bg: #2d3436;
+            --btn-text: #ffffff;
+            
+            --fef-c: #0984e3; 
+            --pprf-c: #e17055; 
+            --nucleus3-c: #00cec9; 
+            --nucleus6-c: #fdcb6e; 
+            --mlf-c: #6c5ce7; 
+            --nerve-c: #b2bec3; 
+            --muscle-c: #ff7675; 
+            --lesion-c: #d63031; 
+            --active-g: #f1c40f; 
+            --success-c: #27ae60;
+        }
+
+        body.dark-mode {
+            --bg-color: #1e272e;
+            --text-color: #f1f2f6;
+            --panel-bg: #2f3542;
+            --border-color: #57606f;
+            --btn-bg: #747d8c;
+            --fef-c: #74b9ff;
+            --active-g: #ffeaa7;
+        }
+
+        body {
+            margin: 0; font-family: 'Poppins', sans-serif; background-color: var(--bg-color);
+            color: var(--text-color); transition: background-color 0.4s, color 0.4s; overflow-x: hidden;
+            display: flex; flex-direction: column; height: 100vh;
+        }
+
+        /* Splash Screen */
+        #splash {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #111;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999;
+            transition: opacity 0.8s ease-out;
+        }
+        .splash-title { color: #fff; font-size: 3.5rem; letter-spacing: 3px; font-weight: 800; animation: text-pulse 2s infinite ease-in-out; }
+        .splash-dev { margin-top: 10px; font-size: 1.2rem; font-weight: 600; background: linear-gradient(90deg, #555, #fff, #555); background-size: 200% auto; color: transparent; -webkit-background-clip: text; animation: dev-glint 2s linear infinite; }
+
+        @keyframes text-pulse { 0%, 100% { transform: scale(1); text-shadow: 0 0 10px rgba(255,255,255,0.2); } 50% { transform: scale(1.05); text-shadow: 0 0 25px rgba(255,255,255,0.6); } }
+        @keyframes dev-glint { to { background-position: 200% center; } }
+
+        /* Header */
+        header {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 30px;
+            background: var(--panel-bg); border-bottom: 2px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-shrink: 0;
+        }
+        h1 { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--fef-c); }
+        .theme-toggle { cursor: pointer; font-size: 1.5rem; background: none; border: none; color: var(--text-color); transition: transform 0.4s; }
+        .theme-toggle:hover { transform: rotate(180deg); }
+
+        /* Main Layout */
+        .layout-wrapper {
+            display: flex; flex: 1; overflow: hidden; max-width: 1400px; margin: 0 auto; width: 100%;
+        }
+
+        /* Sidebar & Tutorial */
+        .sidebar {
+            width: 320px; background: var(--panel-bg); border-right: 1px solid var(--border-color);
+            padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
+        }
+        .sidebar h3 { margin-top: 0; margin-bottom: 10px; font-size: 1.2rem; }
+        
+        select {
+            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--border-color);
+            background: var(--bg-color); color: var(--text-color); font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; outline: none; transition: border-color 0.3s;
+        }
+        select:focus { border-color: var(--fef-c); }
+
+        .tutorial-box {
+            background: var(--bg-color); border-left: 5px solid var(--fef-c); padding: 15px; border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-size: 0.95rem; line-height: 1.5; display: none;
+            animation: slideDown 0.4s ease-out; position: relative; overflow: hidden;
+        }
+        .tutorial-box.active { display: block; }
+        .tutorial-box.success { border-color: var(--success-c); background: rgba(39, 174, 96, 0.1); }
+        .tutorial-box.error { border-color: var(--lesion-c); background: rgba(214, 48, 49, 0.1); animation: shake 0.4s; }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        .tutorial-title { font-weight: 800; color: var(--fef-c); margin-bottom: 5px; }
+        .success .tutorial-title { color: var(--success-c); }
+        .error .tutorial-title { color: var(--lesion-c); }
+        .step-badge { display: inline-block; background: var(--fef-c); color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 800; margin-right: 5px; }
+
+        /* Main App Area */
+        .main-content {
+            flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center;
+        }
+
+        .controls { display: flex; gap: 15px; }
+        .gaze-btn {
+            padding: 10px 25px; font-size: 1rem; cursor: pointer; border: none; border-radius: 8px;
+            background: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-family: 'Poppins', sans-serif;
+            transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .gaze-btn:hover { transform: translateY(-2px); background: var(--fef-c); }
+
+        .diagram-container { width: 100%; max-width: 900px; background: var(--panel-bg); padding: 10px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        svg#anatomy-diag { width: 100%; height: auto; min-height: 500px; }
+
+        /* SVG Styles */
+        .block-text { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; fill: #fff; pointer-events: none; }
+        .muscle-text { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 800; fill: var(--text-color); }
+        line, path, rect, circle, g { transition: all 0.4s ease-in-out; }
+
+        .active-glow { stroke: var(--active-g) !important; stroke-width: 5px !important; filter: drop-shadow(0 0 12px var(--active-g)); stroke-opacity: 1 !important; stroke-dasharray: none !important; }
+        .active-block { fill: var(--active-g) !important; filter: drop-shadow(0 0 15px var(--active-g)); }
+
+        .clickable-block { cursor: pointer; stroke-width: 2px; stroke: rgba(0,0,0,0.1); }
+        .clickable-block:hover { filter: brightness(1.1); transform: scale(1.02); transform-origin: center; }
+
+        @keyframes lesion-pulse { 0%, 100% { filter: drop-shadow(0 0 5px rgba(214, 48, 49, 0.4)); } 50% { filter: drop-shadow(0 0 18px rgba(214, 48, 49, 0.9)); } }
+        @keyframes target-pulse { 0%, 100% { filter: drop-shadow(0 0 5px rgba(46, 204, 113, 0.5)); stroke: #2ecc71; stroke-width: 4px; } 50% { filter: drop-shadow(0 0 20px rgba(46, 204, 113, 1)); stroke: #2ecc71; stroke-width: 6px; } }
+
+        .lesioned .bg-block { fill: #636e72 !important; fill-opacity: 0.3; stroke: var(--lesion-c) !important; animation: lesion-pulse 1.5s infinite; }
+        .lesioned text.block-text { fill: var(--lesion-c); font-weight: 800; }
+        .lesioned path, .lesioned line { stroke: var(--lesion-c); stroke-dasharray: 8 4; stroke-opacity: 0.7; }
+        .block-x { opacity: 0; fill: var(--lesion-c); font-size: 28px; font-weight: 800; pointer-events: none; }
+        .lesioned .block-x { opacity: 1; }
+
+        /* Tutorial Target Glow */
+        .tutorial-hint .bg-block { animation: target-pulse 1.5s infinite; }
+
+        .gaze-arrow { stroke-width: 3px; stroke: #b2bec3; fill: none; marker-end: url(#arrowhead); }
+        .gaze-x { fill: var(--lesion-c); font-size: 30px; font-weight: 800; filter: drop-shadow(0 0 5px rgba(214,48,49,0.5)); }
+
+        .descriptor { width: 100%; max-width: 900px; background: var(--panel-bg); padding: 20px; border-radius: 12px; border-left: 8px solid var(--fef-c); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .descriptor h2 { margin-top: 0; color: var(--fef-c); font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; }
+        .diag-status { font-weight: 800; color: var(--nucleus6-c); font-size: 1.2rem; margin-bottom: 10px; }
+        .diagnosis-active { color: var(--lesion-c) !important; }
+        .path-log { font-family: monospace; font-size: 0.95rem; background: rgba(0,0,0,0.04); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 10px;}
+        .desc-blocked { color: var(--lesion-c); font-weight: bold; }
+        .desc-active { color: #d35400; font-weight: bold; }
+        body.dark-mode .desc-active { color: var(--active-g); }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <div class="splash-title">Eye Neuralesion</div>
+        <div class="splash-dev">developed by Rishu Tiwari</div>
+    </div>
+
+    <header>
+        <h1>Guided Neural Gaze Simulator</h1>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">⚙️</button>
+    </header>
+
+    <div class="layout-wrapper">
+        <div class="sidebar">
+            <div>
+                <h3>Interactive Learning</h3>
+                <select id="preset-dropdown" onchange="startTutorial(this.value)">
+                    <option value="none">-- Select a Lesion to Learn --</option>
+                    <option value="left_ino">Left INO (MLF Syndrome)</option>
+                    <option value="right_ino">Right INO (MLF Syndrome)</option>
+                    <option value="left_1_5">Left One-and-a-Half Syndrome</option>
+                    <option value="right_1_5">Right One-and-a-Half Syndrome</option>
+                    <option value="left_gaze">Left Horizontal Gaze Palsy</option>
+                </select>
+            </div>
+
+            <div id="tutorial-box" class="tutorial-box">
+                <div id="tutorial-title" class="tutorial-title">Tutorial</div>
+                <div id="tutorial-msg">Select a scenario above to begin.</div>
+            </div>
+            
+            <button class="gaze-btn" onclick="clearAllLesions()" style="margin-top: auto; background: var(--border-color); color: var(--text-color);">Clear All Lesions</button>
+        </div>
+
+        <div class="main-content">
+            <div class="controls">
+                <button class="gaze-btn" onclick="look('left')">Look Left</button>
+                <button class="gaze-btn" onclick="look('center')">Center Eyes</button>
+                <button class="gaze-btn" onclick="look('right')">Look Right</button>
+            </div>
+
+            <div class="diagram-container">
+                <svg id="anatomy-diag" viewBox="0 0 800 650">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#b2bec3"/></marker>
+                        <radialGradient id="eyeGrad" cx="40%" cy="40%" r="60%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#dfe6e9"/></radialGradient>
+                        <radialGradient id="irisGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#74b9ff"/><stop offset="70%" stop-color="#0984e3"/><stop offset="100%" stop-color="#000000"/></radialGradient>
+                        <linearGradient id="muscleGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff7675"/><stop offset="100%" stop-color="#d63031"/></linearGradient>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.15"/></filter>
+                    </defs>
+
+                    <g id="all-lines">
+                        <line x1="150" y1="170" x2="550" y2="450" stroke="var(--nerve-c)" stroke-width="3" id="path-fefl-to-pprfr" stroke-dasharray="6 4"/>
+                        <line x1="650" y1="170" x2="250" y2="450" stroke="var(--nerve-c)" stroke-width="3" id="path-fefr-to-pprfl" stroke-dasharray="6 4"/>
+                        
+                        <path d="M 250 450 C 150 450, 150 150, 190 100" stroke="var(--nucleus6-c)" stroke-width="4" fill="none" id="path-n6l-to-lrl"/>
+                        <path d="M 550 450 C 650 450, 650 150, 610 100" stroke="var(--nucleus6-c)" stroke-width="4" fill="none" id="path-n6r-to-lrr"/>
+
+                        <path d="M 350 250 C 350 180, 310 150, 310 100" stroke="var(--nucleus3-c)" stroke-width="4" fill="none" id="path-n3l-to-mrl"/>
+                        <path d="M 450 250 C 450 180, 490 150, 490 100" stroke="var(--nucleus3-c)" stroke-width="4" fill="none" id="path-n3r-to-mrr"/>
+
+                        <g id="mlf-left-tract"><line x1="550" y1="450" x2="325" y2="250" stroke="var(--mlf-c)" stroke-width="5" id="path-n6r-to-mlfl"/></g>
+                        <g id="mlf-right-tract"><line x1="250" y1="450" x2="475" y2="250" stroke="var(--mlf-c)" stroke-width="5" id="path-n6l-to-mlfr"/></g>
+                    </g>
+
+                    <text x="250" y="30" class="muscle-text" text-anchor="middle" font-size="16">LEFT EYE</text>
+                    <text x="550" y="30" class="muscle-text" text-anchor="middle" font-size="16">RIGHT EYE</text>
+
+                    <g id="gaze-left-visuals" opacity="0">
+                        <line x1="250" y1="45" x2="190" y2="45" class="gaze-arrow"/><text x="210" y="70" class="gaze-x" id="x-gaze-l">X</text>
+                        <line x1="550" y1="45" x2="490" y2="45" class="gaze-arrow"/><text x="510" y="70" class="gaze-x" id="x-gaze-lr">X</text>
+                    </g>
+                    <g id="gaze-right-visuals" opacity="0">
+                        <line x1="250" y1="45" x2="310" y2="45" class="gaze-arrow"/><text x="290" y="70" class="gaze-x" id="x-gaze-rl">X</text>
+                        <line x1="550" y1="45" x2="610" y2="45" class="gaze-arrow"/><text x="590" y="70" class="gaze-x" id="x-gaze-r">X</text>
+                    </g>
+
+                    <g id="eye-left" transform="translate(250, 100)">
+                        <rect x="40" y="-15" width="20" height="30" rx="5" fill="url(#muscleGrad)" id="muscle-mr-l"/><text x="65" y="5" class="muscle-text">MR</text>
+                        <rect x="-60" y="-15" width="20" height="30" rx="5" fill="url(#muscleGrad)" id="muscle-lr-l"/><text x="-85" y="5" class="muscle-text">LR</text>
+                        <circle cx="0" cy="0" r="45" fill="url(#eyeGrad)" stroke="#b2bec3" stroke-width="2" filter="url(#shadow)"/>
+                        <g id="pupil-l" style="transform: translateX(0px);"><circle cx="0" cy="0" r="20" fill="url(#irisGrad)"/><circle cx="0" cy="0" r="8" fill="#111827"/><circle cx="-5" cy="-5" r="3" fill="#fff" opacity="0.8"/></g>
+                    </g>
+
+                    <g id="eye-right" transform="translate(550, 100)">
+                        <rect x="-60" y="-15" width="20" height="30" rx="5" fill="url(#muscleGrad)" id="muscle-mr-r"/><text x="-85" y="5" class="muscle-text">MR</text>
+                        <rect x="40" y="-15" width="20" height="30" rx="5" fill="url(#muscleGrad)" id="muscle-lr-r"/><text x="65" y="5" class="muscle-text">LR</text>
+                        <circle cx="0" cy="0" r="45" fill="url(#eyeGrad)" stroke="#b2bec3" stroke-width="2" filter="url(#shadow)"/>
+                        <g id="pupil-r" style="transform: translateX(0px);"><circle cx="0" cy="0" r="20" fill="url(#irisGrad)"/><circle cx="0" cy="0" r="8" fill="#111827"/><circle cx="-5" cy="-5" r="3" fill="#fff" opacity="0.8"/></g>
+                    </g>
+
+                    <g id="fef-left-block" onclick="handleBlockClick('left_fef')" class="clickable-block">
+                        <rect x="90" y="150" width="120" height="45" rx="8" fill="var(--fef-c)" class="bg-block" filter="url(#shadow)"/><text x="150" y="178" class="block-text" text-anchor="middle">Left FEF (8)</text><text x="150" y="182" class="block-x" text-anchor="middle">X</text>
+                    </g>
+                    <g id="fef-right-block" onclick="handleBlockClick('right_fef')" class="clickable-block">
+                        <rect x="590" y="150" width="120" height="45" rx="8" fill="var(--fef-c)" class="bg-block" filter="url(#shadow)"/><text x="650" y="178" class="block-text" text-anchor="middle">Right FEF (8)</text><text x="650" y="182" class="block-x" text-anchor="middle">X</text>
+                    </g>
+
+                    <g id="node-n3-l-group"><rect x="275" y="230" width="100" height="40" rx="20" fill="var(--panel-bg)" stroke="var(--nucleus3-c)" stroke-width="3" filter="url(#shadow)"/><circle cx="300" cy="250" r="12" fill="var(--nucleus3-c)" id="node-n3-l"/><text x="325" y="255" class="muscle-text">3rd N L</text></g>
+                    <g id="node-n3-r-group"><rect x="425" y="230" width="100" height="40" rx="20" fill="var(--panel-bg)" stroke="var(--nucleus3-c)" stroke-width="3" filter="url(#shadow)"/><circle cx="500" cy="250" r="12" fill="var(--nucleus3-c)" id="node-n3-r"/><text x="440" y="255" class="muscle-text">3rd N R</text></g>
+
+                    <g id="mlf-left-block" onclick="handleBlockClick('left_mlf')" class="clickable-block">
+                        <rect x="382" y="332.5" width="115" height="35" rx="17" fill="var(--mlf-c)" class="bg-block" filter="url(#shadow)" transform="rotate(-42, 437.5, 350)"/>
+                        <text x="437.5" y="355" class="block-text" text-anchor="middle">Left MLF</text><text x="437.5" y="360" class="block-x" text-anchor="middle">X</text>
+                    </g>
+                    <g id="mlf-right-block" onclick="handleBlockClick('right_mlf')" class="clickable-block">
+                        <rect x="305" y="332.5" width="115" height="35" rx="17" fill="var(--mlf-c)" class="bg-block" filter="url(#shadow)" transform="rotate(42, 362.5, 350)"/>
+                        <text x="362.5" y="355" class="block-text" text-anchor="middle">Right MLF</text><text x="362.5" y="360" class="block-x" text-anchor="middle">X</text>
+                    </g>
+
+                    <g id="pprf-left-block" onclick="handleBlockClick('left_pprf')" class="clickable-block">
+                        <rect x="180" y="420" width="140" height="60" rx="10" fill="var(--pprf-c)" class="bg-block" filter="url(#shadow)"/><circle cx="210" cy="450" r="16" fill="var(--nucleus6-c)" id="node-n6-l"/><text x="210" y="455" class="block-text" text-anchor="middle" font-size="12">6th</text><text x="270" y="455" class="block-text" text-anchor="middle">Left PPRF</text><text x="250" y="460" class="block-x" text-anchor="middle">X</text>
+                    </g>
+                    <g id="pprf-right-block" onclick="handleBlockClick('right_pprf')" class="clickable-block">
+                        <rect x="480" y="420" width="140" height="60" rx="10" fill="var(--pprf-c)" class="bg-block" filter="url(#shadow)"/><circle cx="590" cy="450" r="16" fill="var(--nucleus6-c)" id="node-n6-r"/><text x="590" y="455" class="block-text" text-anchor="middle" font-size="12">6th</text><text x="530" y="455" class="block-text" text-anchor="middle">Right PPRF</text><text x="550" y="460" class="block-x" text-anchor="middle">X</text>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="descriptor" id="descriptor-box">
+                <h2>Clinical Analysis</h2>
+                <p class="diag-status" id="diagnosis-text">Normal Gaze</p>
+                <p id="explanation-text" style="font-size: 0.95rem;">All pathways are intact. Both eyes can move coordinately in all horizontal directions.</p>
+                <div class="path-log" id="pathway-log"><strong>Pathway Rule:</strong> To look RIGHT, the LEFT FEF initiates. The signal travels to the RIGHT PPRF. The Right PPRF activates Right CN VI (Right eye abducts) AND crosses to the LEFT MLF, which activates Left CN III (Left eye adducts).</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            if(splash) { splash.style.opacity = '0'; setTimeout(() => { splash.style.display = 'none'; }, 800); }
+        }, 2500);
+
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+
+        const lesions = { left_fef: false, right_fef: false, left_pprf: false, right_pprf: false, left_mlf: false, right_mlf: false };
+        let currentGaze = 'center';
+
+        // --- Tutorial System ---
+        const tutorials = {
+            'left_ino': {
+                name: 'Left INO',
+                steps: [ { target: 'left_mlf', msg: 'The MLF connects the 6th nucleus to the contralateral 3rd nucleus. Find and click the <strong>Left MLF</strong> to simulate a lesion.' } ],
+                success: 'Excellent! You created a Left INO. Click "Look Right" and notice how the Left eye fails to move inwards (adduct).'
+            },
+            'right_ino': {
+                name: 'Right INO',
+                steps: [ { target: 'right_mlf', msg: 'Find and click the <strong>Right MLF</strong> block to break the pathway to the right medial rectus.' } ],
+                success: 'Great job! In Right INO, looking left will reveal that the right eye cannot move inward.'
+            },
+            'left_1_5': {
+                name: 'Left 1.5 Syndrome',
+                steps: [
+                    { target: 'left_pprf', msg: 'First, let\'s wipe out complete leftward gaze. Click the <strong>Left PPRF</strong> block.' },
+                    { target: 'left_mlf', msg: 'Now, we need to knock out half of the rightward gaze. Click the <strong>Left MLF</strong>.' }
+                ],
+                success: 'Perfect! Test the gaze buttons. The ONLY horizontal movement left is the right eye abducting.'
+            },
+            'right_1_5': {
+                name: 'Right 1.5 Syndrome',
+                steps: [
+                    { target: 'right_pprf', msg: 'Start by lesioning the <strong>Right PPRF</strong> to break rightward gaze.' },
+                    { target: 'right_mlf', msg: 'Next, lesion the <strong>Right MLF</strong> to prevent the right eye from moving left.' }
+                ],
+                success: 'Done! The only working horizontal movement is now the left eye looking outward.'
+            },
+            'left_gaze': {
+                name: 'Left Gaze Palsy',
+                steps: [ { target: 'left_pprf', msg: 'A complete gaze palsy to one side means the "horizontal gaze center" is broken. Click the <strong>Left PPRF</strong>.' } ],
+                success: 'Correct. Neither eye can look left now. Try the Look Left button.'
+            }
+        };
+
+        let activeTutorial = null;
+        let currentStepIdx = 0;
+
+        function startTutorial(key) {
+            clearAllLesions();
+            const box = document.getElementById('tutorial-box');
+            
+            if (key === 'none') {
+                box.classList.remove('active');
+                activeTutorial = null;
+                return;
+            }
+
+            activeTutorial = tutorials[key];
+            currentStepIdx = 0;
+            renderTutorialStep();
+        }
+
+        function renderTutorialStep() {
+            const box = document.getElementById('tutorial-box');
+            const title = document.getElementById('tutorial-title');
+            const msg = document.getElementById('tutorial-msg');
+            
+            box.className = 'tutorial-box active'; // Reset classes
+            
+            // Clear old hints
+            document.querySelectorAll('.tutorial-hint').forEach(el => el.classList.remove('tutorial-hint'));
+
+            if (currentStepIdx < activeTutorial.steps.length) {
+                const step = activeTutorial.steps[currentStepIdx];
+                title.innerText = `Recreating ${activeTutorial.name}`;
+                msg.innerHTML = `<span class="step-badge">Step ${currentStepIdx + 1}/${activeTutorial.steps.length}</span> ` + step.msg;
+                
+                // Add pulsing hint to the exact SVG block needed
+                const targetId = step.target.replace('_', '-') + '-block';
+                document.getElementById(targetId)?.classList.add('tutorial-hint');
+            } else {
+                // Success State
+                box.classList.add('success');
+                title.innerText = "Syndrome Recreated!";
+                msg.innerHTML = activeTutorial.success;
+            }
+        }
+
+        function triggerError(clickedName) {
+            const box = document.getElementById('tutorial-box');
+            box.classList.remove('error'); 
+            void box.offsetWidth; // trigger reflow to restart animation
+            box.classList.add('error');
+            
+            document.getElementById('tutorial-title').innerText = "Not quite...";
+            const targetName = activeTutorial.steps[currentStepIdx].target.replace('_', ' ').toUpperCase();
+            document.getElementById('tutorial-msg').innerHTML = `You clicked the ${clickedName}, but we need to lesion the <strong>${targetName}</strong> right now. Keep trying!`;
+            
+            setTimeout(renderTutorialStep, 3500); // revert to hint after 3.5s
+        }
+
+        function clearAllLesions() {
+            for(let key in lesions) {
+                if(lesions[key]) toggleLesionLogic(key);
+            }
+            if(activeTutorial) {
+                currentStepIdx = 0;
+                renderTutorialStep();
+            }
+        }
+
+        // --- Core Interaction ---
+        function handleBlockClick(lesionKey) {
+            // Intercept for tutorial logic
+            if (activeTutorial && currentStepIdx < activeTutorial.steps.length) {
+                const expectedTarget = activeTutorial.steps[currentStepIdx].target;
+                if (lesionKey === expectedTarget) {
+                    toggleLesionLogic(lesionKey);
+                    currentStepIdx++;
+                    renderTutorialStep();
+                } else {
+                    const fancyName = lesionKey.replace('_', ' ').toUpperCase();
+                    triggerError(fancyName);
+                }
+            } else {
+                // Free play mode
+                toggleLesionLogic(lesionKey);
+            }
+        }
+
+        function toggleLesionLogic(lesionKey) {
+            lesions[lesionKey] = !lesions[lesionKey];
+            const blockIdMap = {
+                left_fef: 'fef-left-block', right_fef: 'fef-right-block',
+                left_pprf: 'pprf-left-block', right_pprf: 'pprf-right-block',
+                left_mlf: 'mlf-left-block', right_mlf: 'mlf-right-block'
+            };
+            const targetEl = document.getElementById(blockIdMap[lesionKey]);
+            
+            if(lesionKey === 'left_mlf') document.getElementById('mlf-left-tract').classList.toggle('lesioned');
+            if(lesionKey === 'right_mlf') document.getElementById('mlf-right-tract').classList.toggle('lesioned');
+
+            if (lesions[lesionKey]) targetEl.classList.add('lesioned');
+            else targetEl.classList.remove('lesioned');
+            
+            updateGazeIndicators(currentGaze);
+            updateDescriptor(currentGaze);
+            look('center');
+        }
+
+        function resetDiagram() {
+            document.querySelectorAll('.active-glow, .active-block').forEach(el => el.classList.remove('active-glow', 'active-block'));
+            document.getElementById('pupil-l').style.transform = 'translateX(0px)';
+            document.getElementById('pupil-r').style.transform = 'translateX(0px)';
+        }
+
+        function updateGazeIndicators(direction) {
+            document.getElementById('gaze-left-visuals').setAttribute('opacity', direction === 'left' ? '1' : '0');
+            document.getElementById('gaze-right-visuals').setAttribute('opacity', direction === 'right' ? '1' : '0');
+            document.querySelectorAll('.gaze-x').forEach(x => x.setAttribute('opacity', '0'));
+        }
+
+        function applyGazeX(xId) { document.getElementById(xId).setAttribute('opacity', '1'); }
+        function highlightLine(id) { document.getElementById(id)?.classList.add('active-glow'); }
+        function highlightNode(id) { document.getElementById(id)?.classList.add('active-block'); }
+
+        function look(direction) {
+            currentGaze = direction;
+            resetDiagram();
+            updateGazeIndicators(direction);
+            if (direction === 'center') { updateDescriptor('center'); return; }
+
+            const pathText = document.getElementById('pathway-log');
+            let log = [];
+            const pupils = { l: 0, r: 0 }; 
+
+            if (direction === 'right') {
+                log.push("Initiate Right Gaze");
+                if (lesions.left_fef) { log.push("<span class='desc-blocked'>Blocked at Left FEF</span>"); pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`; return; }
+                highlightNode('fef-left-block'); highlightLine('path-fefl-to-pprfr');
+                log.push("<span class='desc-active'>Left Area 8</span>");
+
+                if (lesions.right_pprf) { log.push("<span class='desc-blocked'>Blocked at Right PPRF</span>"); pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`; return; }
+                highlightNode('node-n6-r');
+                log.push("<span class='desc-active'>Right PPRF/6th</span>");
+                
+                highlightLine('path-n6r-to-lrr'); highlightNode('muscle-lr-r');
+                log.push("<span class='desc-active'>Right Abducts</span>");
+                pupils.r = 20; 
+
+                if (lesions.left_mlf) {
+                    log.push("<span class='desc-blocked'>Blocked at Left MLF! (INO)</span>");
+                    pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`;
+                    applyGazeX('x-gaze-rl'); 
+                } else {
+                    highlightLine('path-n6r-to-mlfl'); highlightNode('mlf-left-block');
+                    log.push("<span class='desc-active'>Crosses MLF</span>");
+                    highlightNode('node-n3-l'); highlightLine('path-n3l-to-mrl'); highlightNode('muscle-mr-l');
+                    log.push("<span class='desc-active'>Left Adducts</span>");
+                    pupils.l = 20; 
+                }
+            }
+            else if (direction === 'left') {
+                log.push("Initiate Left Gaze");
+                if (lesions.right_fef) { log.push("<span class='desc-blocked'>Blocked at Right FEF</span>"); pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`; return; }
+                highlightNode('fef-right-block'); highlightLine('path-fefr-to-pprfl');
+                log.push("<span class='desc-active'>Right Area 8</span>");
+
+                if (lesions.left_pprf) { log.push("<span class='desc-blocked'>Blocked at Left PPRF</span>"); pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`; return; }
+                highlightNode('node-n6-l');
+                log.push("<span class='desc-active'>Left PPRF/6th</span>");
+                
+                highlightLine('path-n6l-to-lrl'); highlightNode('muscle-lr-l');
+                log.push("<span class='desc-active'>Left Abducts</span>");
+                pupils.l = -20; 
+
+                if (lesions.right_mlf) {
+                    log.push("<span class='desc-blocked'>Blocked at Right MLF! (INO)</span>");
+                    pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`;
+                    applyGazeX('x-gaze-lr'); 
+                } else {
+                    highlightLine('path-n6l-to-mlfr'); highlightNode('mlf-right-block');
+                    log.push("<span class='desc-active'>Crosses MLF</span>");
+                    highlightNode('node-n3-r'); highlightLine('path-n3r-to-mrr'); highlightNode('muscle-mr-r');
+                    log.push("<span class='desc-active'>Right Adducts</span>");
+                    pupils.r = -20; 
+                }
+            }
+
+            document.getElementById('pupil-l').style.transform = `translateX(${pupils.l}px)`;
+            document.getElementById('pupil-r').style.transform = `translateX(${pupils.r}px)`;
+            pathText.innerHTML = `<strong>Live Path:</strong> ${log.join(' → ')}`;
+            updateDescriptor(direction);
+        }
+
+        function updateDescriptor(direction) {
+            const status = document.getElementById('diagnosis-text');
+            const exp = document.getElementById('explanation-text');
+            
+            let pprfL = lesions.left_pprf, pprfR = lesions.right_pprf;
+            let mlfL = lesions.left_mlf, mlfR = lesions.right_mlf;
+
+            status.classList.remove('diagnosis-active');
+
+            if (!pprfL && !pprfR && !mlfL && !mlfR && !lesions.left_fef && !lesions.right_fef) {
+                status.innerText = "Normal Horizontal Gaze";
+                status.style.color = "var(--nucleus6-c)";
+                exp.innerText = "All pathways are intact. Test the gaze buttons to trace the visual result of normal function.";
+            }
+            else if (pprfL && mlfL) {
+                status.innerText = "Left One-and-a-Half Syndrome";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Lesion of Left PPRF AND Left MLF. Left gaze is completely gone (Left PPRF). On Right gaze, the Left eye fails to adduct (Left MLF). Only right eye abduction remains (1.5 movements lost).";
+            }
+            else if (pprfR && mlfR) {
+                status.innerText = "Right One-and-a-Half Syndrome";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Lesion of Right PPRF AND Right MLF. Complete Right gaze palsy AND Left gaze palsy for the Right eye. Only Left eye abduction remains.";
+            }
+            else if (mlfL && mlfR) {
+                status.innerText = "Bilateral INO";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Both MLF tracts are lesioned. Patient has trouble with both look-right AND look-left. Abduction is normal, but the adducting eye fails horizontally in both directions.";
+            }
+            else if (mlfL) {
+                status.innerText = "Left INO (MLF Syndrome)";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Lesion of the Left MLF. When looking RIGHT, the Left eye cannot adduct. When looking Left, gaze is normal.";
+            }
+            else if (mlfR) {
+                status.innerText = "Right INO (MLF Syndrome)";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Lesion of the Right MLF. When looking LEFT, the Right eye cannot adduct. Right gaze is normal.";
+            }
+            else if (pprfL) {
+                status.innerText = "Left Horizontal Gaze Palsy";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Lesion of the Left PPRF. Neither eye can look Left. Looking Right is normal.";
+            }
+            else if (pprfR) {
+                status.innerText = "Right Horizontal Gaze Palsy";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Lesion of the Right PPRF. Neither eye can look Right. Looking Left is normal.";
+            }
+            else if (lesions.left_fef || lesions.right_fef) {
+                status.innerText = "Cortex Gaze Palsy (Area 8)";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "Failure at the Frontal Eye Fields (Area 8). Because pathways cross, a Left Area 8 lesion impairs Right gaze.";
+            } else {
+                status.innerText = "Complex Gaze Disorder";
+                status.classList.add('diagnosis-active');
+                exp.innerText = "You have selected a custom combination of lesions. Test the gaze buttons to trace the visual result.";
+            }
+        }
+    </script>
+</body>
+</html>

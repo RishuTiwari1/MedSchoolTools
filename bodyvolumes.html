@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Darrow-Yannet Simulator</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #ea580c;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.75rem;
+            color: #0f172a;
+        }
+        .developer-credit {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #64748b;
+            animation: gentle-pulse 3s infinite ease-in-out;
+        }
+        @keyframes gentle-pulse {
+            0% { opacity: 0.7; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-2px); color: var(--primary); }
+            100% { opacity: 0.7; transform: translateY(0); }
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        select, input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        canvas {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-width: 100%;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+        }
+        .btn-outline:hover {
+            background: #f1f5f9;
+            color: var(--text);
+        }
+        .explanation-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        .explanation-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            background: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .stats div { text-align: center; }
+        .stats strong { display: block; font-size: 1.15rem; color: #0f172a; margin-top: 4px; }
+        
+        @media (max-width: 600px) {
+            .controls { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: 1fr; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">
+        <h1>Interactive Darrow-Yannet Simulator</h1>
+        <div class="developer-credit">developed by Rishu Tiwari</div>
+    </div>
+    
+    <div class="controls">
+        <div class="control-group">
+            <label for="preset"><strong>Clinical Scenarios (Presets)</strong></label>
+            <select id="preset">
+                <option value="normal">Normal Baseline</option>
+                <option value="iso-exp">Isotonic Expansion (0.9% Normal Saline)</option>
+                <option value="iso-con">Isotonic Contraction (Hemorrhage / Diarrhea)</option>
+                <option value="hyper-exp">Hypertonic Expansion (3% Hypertonic Saline)</option>
+                <option value="hyper-con">Hypertonic Contraction (Sweating / Diabetes Insipidus)</option>
+                <option value="hypo-exp">Hypotonic Expansion (SIADH / Polydipsia)</option>
+                <option value="hypo-con">Hypotonic Contraction (Adrenal Insufficiency)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label><strong>Custom Sliders</strong> (Manual override)</label>
+            <label for="waterSlider" style="font-size: 0.9rem;">Water Change: <strong><span id="waterVal">0</span> L</strong></label>
+            <input type="range" id="waterSlider" min="-10" max="10" step="0.5" value="0">
+            
+            <label for="saltSlider" style="font-size: 0.9rem;">Salt (Osmoles) Change in ECF: <strong><span id="saltVal">0</span> mOsm</strong></label>
+            <input type="range" id="saltSlider" min="-1500" max="1500" step="50" value="0">
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button id="resetBtn" class="btn btn-outline">↺ Reset to Normal</button>
+        <button id="downloadBtn" class="btn btn-primary">↓ Download Diagram</button>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="dyCanvas" width="750" height="400"></canvas>
+    </div>
+
+    <div class="explanation-box">
+        <div class="explanation-title" id="diagTitle">Normal State</div>
+        <div id="diagText" style="line-height: 1.5; color: #334155;">Baseline physiological state. Water is distributed 2/3 to the Intracellular Fluid (ICF) and 1/3 to the Extracellular Fluid (ECF). Osmolarity is equal across both compartments.</div>
+        
+        <div class="stats">
+            <div>Osmolarity<br><strong id="statOsm">290.0 mOsm/L</strong></div>
+            <div>ICF Volume<br><strong id="statIcf">24.0 L</strong></div>
+            <div>ECF Volume<br><strong id="statEcf">12.0 L</strong></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const BASE_ICF = 24; 
+    const BASE_ECF = 12; 
+    const BASE_OSM = 290; 
+    
+    const BASE_ICF_OSMOLES = BASE_ICF * BASE_OSM; 
+    const BASE_ECF_OSMOLES = BASE_ECF * BASE_OSM; 
+
+    const canvas = document.getElementById('dyCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const waterSlider = document.getElementById('waterSlider');
+    const saltSlider = document.getElementById('saltSlider');
+    const presetSelect = document.getElementById('preset');
+    const resetBtn = document.getElementById('resetBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // Drawing parameters
+    const xAxisY = 340; 
+    const yAxisX = 60;  
+    const membraneX = 420; 
+    const minOsm = 200;
+    const maxOsm = 400;
+    
+    // Scale factors
+    const pixelsPerLiter = 10; 
+    const pixelsPerOsm = 280 / (maxOsm - minOsm); 
+
+    function drawAxes() {
+        // Fill white background for clean image export
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 1. Horizontal Grid Lines
+        ctx.fillStyle = '#64748b';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'right';
+        
+        for(let o = 200; o <= 400; o += 50) {
+            let y = xAxisY - ((o - minOsm) * pixelsPerOsm);
+            
+            ctx.beginPath();
+            ctx.moveTo(yAxisX, y);
+            ctx.lineTo(canvas.width - 20, y);
+            ctx.strokeStyle = '#f1f5f9';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillText(o, yAxisX - 8, y + 4);
+            ctx.beginPath();
+            ctx.moveTo(yAxisX - 5, y);
+            ctx.lineTo(yAxisX, y);
+            ctx.strokeStyle = '#000';
+            ctx.stroke();
+        }
+
+        // 2. Y-Axis
+        ctx.beginPath();
+        ctx.moveTo(yAxisX, 30);
+        ctx.lineTo(yAxisX, xAxisY);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(20, xAxisY / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.fillText("Osmolarity (mOsm/L)", 0, 0);
+        ctx.restore();
+
+        // 3. X-Axis
+        ctx.beginPath();
+        ctx.moveTo(yAxisX, xAxisY);
+        ctx.lineTo(canvas.width - 20, xAxisY);
+        ctx.stroke();
+
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.fillText("<- ICF Volume (L)", membraneX - 120, xAxisY + 30);
+        ctx.fillText("ECF Volume (L) ->", membraneX + 100, xAxisY + 30);
+
+        // 4. Cell Membrane
+        ctx.beginPath();
+        ctx.moveTo(membraneX, 30);
+        ctx.lineTo(membraneX, xAxisY + 10);
+        ctx.setLineDash([6, 6]);
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        ctx.font = 'italic 11px sans-serif';
+        ctx.fillStyle = '#64748b';
+        ctx.fillText("Cell Membrane", membraneX, 20);
+    }
+
+    function drawCompartment(type, volumeLiters, osm, color, isDashed = false) {
+        let w = volumeLiters * pixelsPerLiter;
+        let h = (osm - minOsm) * pixelsPerOsm;
+        let y = xAxisY - h;
+        let x = type === 'ICF' ? membraneX - w : membraneX;
+
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        
+        if (isDashed) {
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+    }
+
+    function updateApp() {
+        let dWater = parseFloat(waterSlider.value);
+        let dSalt = parseFloat(saltSlider.value);
+
+        // Update labels
+        let waterSign = dWater > 0 ? "+" : "";
+        let saltSign = dSalt > 0 ? "+" : "";
+        document.getElementById('waterVal').innerText = waterSign + dWater.toFixed(1);
+        document.getElementById('saltVal').innerText = saltSign + dSalt.toFixed(0);
+
+        // Physiology Math
+        let newTBW = BASE_ICF + BASE_ECF + dWater;
+        if(newTBW < 10) newTBW = 10; 
+        
+        let newEcfOsmoles = BASE_ECF_OSMOLES + dSalt;
+        let newTotalOsmoles = BASE_ICF_OSMOLES + newEcfOsmoles;
+
+        let newOsm = newTotalOsmoles / newTBW;
+        let newIcfVol = BASE_ICF_OSMOLES / newOsm;
+        let newEcfVol = newEcfOsmoles / newOsm;
+
+        // Render Graphics
+        drawAxes();
+        drawCompartment('ICF', BASE_ICF, BASE_OSM, 'transparent', true);
+        drawCompartment('ECF', BASE_ECF, BASE_OSM, 'transparent', true);
+        drawCompartment('ICF', newIcfVol, newOsm, 'rgba(37, 99, 235, 0.4)'); 
+        drawCompartment('ECF', newEcfVol, newOsm, 'rgba(234, 88, 12, 0.4)'); 
+
+        // Labels inside compartments
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        let textY = xAxisY - ((newOsm - minOsm) * pixelsPerOsm) + 25;
+        if (textY > xAxisY - 10) textY = xAxisY - 10; 
+        ctx.fillText("ICF", membraneX - (newIcfVol * pixelsPerLiter)/2, textY);
+        ctx.fillText("ECF", membraneX + (newEcfVol * pixelsPerLiter)/2, textY);
+
+        updateExplanation(newOsm, newIcfVol, newEcfVol, dWater, dSalt);
+    }
+
+    function updateExplanation(osm, icf, ecf, dw, ds) {
+        document.getElementById('statOsm').innerText = osm.toFixed(1) + " mOsm/L";
+        document.getElementById('statIcf').innerText = icf.toFixed(1) + " L";
+        document.getElementById('statEcf').innerText = ecf.toFixed(1) + " L";
+
+        let title = "";
+        let text = "";
+
+        let tonicity = "";
+        if (osm > BASE_OSM + 2) tonicity = "Hypertonic";
+        else if (osm < BASE_OSM - 2) tonicity = "Hypotonic";
+        else tonicity = "Isotonic";
+
+        let volume = "";
+        if (ecf > BASE_ECF + 0.5) volume = "Expansion";
+        else if (ecf < BASE_ECF - 0.5) volume = "Contraction";
+        else volume = "Normal Volume";
+
+        if (dw === 0 && ds === 0) {
+            title = "Normal State";
+            text = "Baseline physiological state. Water is distributed 2/3 to the Intracellular Fluid (ICF) and 1/3 to the Extracellular Fluid (ECF). Osmolarity is strictly maintained at ~290 mOsm/L.";
+        } else {
+            title = `${tonicity} ${volume}`;
+            
+            text = `<strong>1. Primary Disturbance:</strong> `;
+            if(ds > 0) text += `Salt (osmoles) added to ECF. `;
+            if(ds < 0) text += `Salt (osmoles) lost from ECF. `;
+            if(dw > 0) text += `Pure water gained. `;
+            if(dw < 0) text += `Pure water lost. `;
+            
+            text += `<br><br><strong>2. Osmotic Shift:</strong> Systemic osmolarity becomes <strong>${osm.toFixed(1)} mOsm/L</strong>. `;
+            
+            if (tonicity === "Hypertonic") {
+                text += `Because ECF osmolarity increases, water shifts <em>out of the ICF and into the ECF</em> to equalize pressures.`;
+            } else if (tonicity === "Hypotonic") {
+                text += `Because ECF osmolarity decreases, water shifts <em>out of the ECF and into the ICF</em> to equalize pressures.`;
+            } else {
+                text += `Since osmolarity didn't change significantly, no water shifts between ICF and ECF. Volume change remains entirely in the ECF.`;
+            }
+        }
+
+        document.getElementById('diagTitle').innerText = title;
+        document.getElementById('diagText').innerHTML = text;
+    }
+
+    // Event Listeners
+    presetSelect.addEventListener('change', (e) => {
+        let val = e.target.value;
+        switch(val) {
+            case 'normal': waterSlider.value = 0; saltSlider.value = 0; break;
+            case 'iso-exp': waterSlider.value = 2; saltSlider.value = 580; break;
+            case 'iso-con': waterSlider.value = -2; saltSlider.value = -580; break;
+            case 'hyper-exp': waterSlider.value = 1; saltSlider.value = 1000; break;
+            case 'hyper-con': waterSlider.value = -3; saltSlider.value = -150; break;
+            case 'hypo-exp': waterSlider.value = 3; saltSlider.value = 0; break;
+            case 'hypo-con': waterSlider.value = -1.5; saltSlider.value = -800; break;
+        }
+        updateApp();
+    });
+
+    waterSlider.addEventListener('input', () => { presetSelect.value = "normal"; updateApp(); });
+    saltSlider.addEventListener('input', () => { presetSelect.value = "normal"; updateApp(); });
+
+    resetBtn.addEventListener('click', () => {
+        presetSelect.value = "normal";
+        waterSlider.value = 0;
+        saltSlider.value = 0;
+        updateApp();
+    });
+
+    downloadBtn.addEventListener('click', () => {
+        const link = document.createElement('a');
+        let currentPreset = presetSelect.options[presetSelect.selectedIndex].text.split(' ')[0];
+        link.download = `Darrow-Yannet-${currentPreset}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+
+    // Initialize
+    updateApp();
+</script>
+</body>
+</html>
