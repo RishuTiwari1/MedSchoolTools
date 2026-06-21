@@ -28,7 +28,6 @@
         }
         .carousel-card {
             position: absolute;
-            /* Premium cubic-bezier curve for snappy, console-like kinetic transitions */
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
                         opacity 0.5s ease, 
                         box-shadow 0.5s ease;
@@ -37,7 +36,6 @@
             z-index: 0;
         }
         
-        /* [Active Center State] */
         .carousel-card.active {
             opacity: 1;
             pointer-events: auto;
@@ -46,7 +44,6 @@
             box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.25);
         }
         
-        /* [Left Adjacent State] */
         .carousel-card.left-1 {
             opacity: 0.65;
             pointer-events: auto;
@@ -54,7 +51,6 @@
             z-index: 30;
         }
         
-        /* [Right Adjacent State] */
         .carousel-card.right-1 {
             opacity: 0.65;
             pointer-events: auto;
@@ -62,14 +58,12 @@
             z-index: 30;
         }
         
-        /* [Far Left Hidden Stack] */
         .carousel-card.left-2 {
             opacity: 0;
             transform: translateX(-400px) scale(0.6) translateZ(-100px) rotateY(45deg);
             z-index: 20;
         }
         
-        /* [Far Right Hidden Stack] */
         .carousel-card.right-2 {
             opacity: 0;
             transform: translateX(400px) scale(0.6) translateZ(-100px) rotateY(-45deg);
@@ -154,7 +148,7 @@
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100 opacity-0 transition-opacity duration-300">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100 transition-opacity duration-300">
 
     <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 invisible pointer-events-none">
         <div class="flex flex-col items-center gap-4 text-center transform translate-y-4 opacity-0 transition-all duration-700" id="splashContainer">
@@ -237,7 +231,7 @@
         </div>
     </div>
 
-    <div id="mainWorkspace" class="opacity-0 transition-opacity duration-500 flex flex-col justify-between min-h-screen w-full relative">
+    <div id="mainWorkspace" class="transition-opacity duration-500 flex flex-col justify-between min-h-screen w-full relative">
         
         <div id="profileBadgeBtn" class="absolute top-4 right-4 md:right-10 z-20 flex flex-col items-end text-right min-h-[40px] cursor-pointer hover:bg-slate-200/50 p-1.5 rounded-xl border border-transparent hover:border-slate-200/40 transition-all group">
             <span id="headerUserName" class="text-xs font-bold text-slate-700 tracking-tight group-hover:text-sky-600"></span>
@@ -261,6 +255,7 @@
         </header>
 
         <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
+            
             <div class="relative w-full flex items-center justify-between py-6">
                 
                 <button id="prevBtn" class="absolute left-2 md:left-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
@@ -271,6 +266,7 @@
 
                 <div class="carousel-container w-full overflow-hidden py-10">
                     <div id="carouselTrack" class="carousel-track">
+                        
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 mb-4 border border-sky-100/70">
@@ -349,6 +345,7 @@
                             </div>
                             <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">Launch</a>
                         </div>
+
                     </div>
                 </div>
 
@@ -357,7 +354,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                 </button>
+
             </div>
+
             <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
         </main>
 
@@ -408,10 +407,55 @@
         const urlParams = new URLSearchParams(window.location.search);
         const isFastTrack = urlParams.get('source') === 'fasttrack';
         
-        // Check display modes
-        const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        const isInstalled = localStorage.getItem('medTools_installed') === 'true';
+        // --- MASTER BOOT SEQUENCE ---
+        function initApp() {
+            const savedName = localStorage.getItem('medTools_user');
+            const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isInstalled = localStorage.getItem('medTools_installed') === 'true';
 
+            // 1. FAST-TRACK INSTALL PROMPT
+            // Only show if they arrived via link, aren't in the PWA, and haven't recorded an installation yet
+            if (isFastTrack && !isStandaloneWindow && !isInstalled) {
+                // Keep onboarding hidden for now
+                nameModal.classList.add('invisible', 'pointer-events-none');
+                nameModal.style.display = 'none';
+
+                // Fancy Installation Prompt Interface
+                modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-600 mb-4 border border-sky-100 relative shadow-inner";
+                modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
+                
+                modalTitle.innerText = "Install Application";
+                modalTitle.className = "text-xl font-bold text-slate-900 tracking-tight mb-2";
+                modalText.innerHTML = `
+                    Install MedSchoolTools to your home screen for quick access and full-screen mode.<br>
+                    <span class="text-slate-500 text-xs mt-2 block font-medium">No app store required. Free to use.</span>
+                `;
+                
+                modalButton.innerText = "Install Application";
+                modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/40 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1";
+                modalButton.style.display = 'block';
+
+                attentionModal.classList.remove('invisible', 'pointer-events-none');
+                attentionModal.classList.add('opacity-100');
+                setTimeout(() => modalBox.classList.remove('scale-95'), 50);
+                return; // Halt here, wait for user response
+            }
+
+            // 2. STANDARD BOOT
+            if (savedName) {
+                updateHeaderUI(savedName);
+                triggerWinkTransition(savedName);
+                
+                // Only show testing alert if it's NOT the installed PWA
+                if (!isStandaloneWindow) {
+                    setTimeout(() => showTestingAlert(), 2800);
+                }
+            } else {
+                showOnboarding();
+            }
+        }
+
+        // --- CORE UI FUNCTIONS ---
         function getFirstName(fullName) {
             if (!fullName) return "Friend";
             return fullName.trim().split(' ')[0];
@@ -428,8 +472,12 @@
 
         function triggerWinkTransition(savedName) {
             splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
-            splashScreen.classList.remove('invisible', 'pointer-events-none');
-            splashScreen.classList.add('opacity-100');
+            splashScreen.style.display = 'flex';
+            
+            setTimeout(() => {
+                splashScreen.classList.remove('invisible', 'pointer-events-none');
+                splashScreen.classList.add('opacity-100');
+            }, 10);
             
             setTimeout(() => {
                 splashContainer.classList.remove('translate-y-4', 'opacity-0');
@@ -438,36 +486,28 @@
             setTimeout(() => {
                 const targetX = window.innerWidth / 2 - 120;
                 const targetY = -(window.innerHeight / 2 - 50);
+
                 splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
                 splashContainer.style.opacity = '0';
                 splashScreen.classList.add('opacity-0');
                 
                 setTimeout(() => {
                     splashScreen.classList.add('invisible', 'pointer-events-none');
+                    splashScreen.style.display = 'none';
                 }, 600);
             }, 2200);
         }
 
-        function runStandardBoot(savedName) {
-            if (savedName) {
-                updateHeaderUI(savedName);
-                triggerWinkTransition(savedName);
-                
-                // Show testing disclaimer if we are in the standard browser tab (not PWA)
-                if (!isPWA) {
-                    setTimeout(() => showAttentionModal(), 2800);
-                }
-            } else {
-                // First-time user onboarding
-                setTimeout(() => {
-                    nameModal.classList.remove('invisible', 'pointer-events-none');
-                    nameModal.classList.add('opacity-100');
-                    setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);
-                }, 400);
-            }
+        function showOnboarding() {
+            nameModal.style.display = 'flex';
+            setTimeout(() => {
+                nameModal.classList.remove('invisible', 'pointer-events-none');
+                nameModal.classList.add('opacity-100');
+                setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);
+            }, 100);
         }
 
-        function showAttentionModal() {
+        function showTestingAlert() {
             modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative";
             modalIconContainer.innerHTML = `<span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 relative"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" /></svg>`;
             
@@ -481,49 +521,16 @@
             modalButton.className = "w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none";
             modalButton.style.display = 'block';
 
-            attentionModal.classList.remove('invisible', 'pointer-events-none');
-            attentionModal.classList.add('opacity-100');
-            setTimeout(() => modalBox.classList.remove('scale-95'), 50);
-        }
-
-        // --- MASTER BOOT SEQUENCE ---
-        function initApp() {
-            // FIX: Instantly remove opacity blockers to prevent blank screen race conditions
-            document.body.classList.remove('opacity-0');
-            const mainWorkspace = document.getElementById('mainWorkspace');
-            mainWorkspace.classList.remove('opacity-0');
-
-            const savedName = localStorage.getItem('medTools_user');
-
-            // 1. FAST-TRACK INSTALL PROMPT
-            // Only show if they arrived via link, aren't in the PWA, and haven't recorded an installation yet
-            if (isFastTrack && !isPWA && !isInstalled) {
-                modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-600 mb-4 border border-sky-100 relative shadow-inner";
-                modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
-                
-                modalTitle.innerText = "Install Application";
-                modalTitle.className = "text-xl font-bold text-slate-900 tracking-tight mb-2";
-                modalText.innerHTML = `
-                    Install MedSchoolTools to your home screen for quick access and full-screen mode.<br>
-                    <span class="text-slate-500 text-xs mt-2 block">No app store required. Free to use.</span>
-                `;
-                
-                // Fancy Premium Gradient Install Button
-                modalButton.innerText = "Install Application";
-                modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/40 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1";
-                modalButton.style.display = 'block';
-
+            attentionModal.style.display = 'flex';
+            setTimeout(() => {
                 attentionModal.classList.remove('invisible', 'pointer-events-none');
                 attentionModal.classList.add('opacity-100');
                 setTimeout(() => modalBox.classList.remove('scale-95'), 50);
-                return; // Wait for user decision
-            }
-
-            // 2. STANDARD BOOT SEQUENCE
-            runStandardBoot(savedName);
+            }, 10);
         }
 
-        initApp(); // Trigger immediately
+        // Fire Initialization Immediately!
+        initApp();
 
         // --- EVENT LISTENERS ---
         saveNameBtn.addEventListener('click', () => {
@@ -541,17 +548,22 @@
             
             setTimeout(() => {
                 nameModal.classList.add('invisible', 'pointer-events-none');
+                nameModal.style.display = 'none';
+                
                 triggerWinkTransition(enteredName);
                 
-                if (!isPWA) {
-                    setTimeout(() => showAttentionModal(), 2800);
+                const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                if (!isStandaloneWindow && !isFastTrack) {
+                    setTimeout(() => showTestingAlert(), 2800);
                 }
-            }, 200);
+            }, 400);
         });
 
-        // Combined Modal Button Logic (Handles Installation & Testing Acknowledge)
+        // Combined Modal Button Logic (Installation vs Testing Acknowledge)
         modalButton.addEventListener('click', async () => {
-            const isInstallMode = (isFastTrack && !isPWA && !isInstalled);
+            const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isInstalled = localStorage.getItem('medTools_installed') === 'true';
+            const isInstallMode = (isFastTrack && !isStandaloneWindow && !isInstalled && modalTitle.innerText === "Install Application");
 
             if (isInstallMode) {
                 if (deferredPrompt) {
@@ -562,7 +574,6 @@
                         deferredPrompt = null;
                         localStorage.setItem('medTools_installed', 'true');
                         
-                        // Clean installing processing view
                         modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-600 mb-4 border border-slate-200 relative";
                         modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 animate-spin"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>`;
                         
@@ -572,35 +583,46 @@
                             <span class="text-slate-500 text-xs mt-3 block font-semibold">You may now close this browser window.</span>
                         `;
                         modalButton.style.display = 'none';
-                        return;
+                        return; 
                     }
                 }
                 
-                // User rejected prompt or it wasn't available; proceed to standard boot
+                // Skipped Install - Move to Onboarding/Splash cleanly
                 deferredPrompt = null;
                 modalBox.classList.add('scale-95');
                 attentionModal.classList.replace('opacity-100', 'opacity-0');
+                
                 setTimeout(() => {
                     attentionModal.classList.add('invisible', 'pointer-events-none');
-                    runStandardBoot(localStorage.getItem('medTools_user'));
+                    attentionModal.style.display = 'none';
+                    
+                    if (!localStorage.getItem('medTools_user')) {
+                        showOnboarding();
+                    } else {
+                        triggerWinkTransition(localStorage.getItem('medTools_user'));
+                    }
                 }, 400);
                 return;
             }
 
-            // Standard Testing Phase Acknowledge Flow
+            // Standard Testing Alert Dismissal
             modalBox.classList.add('scale-95');
             attentionModal.classList.replace('opacity-100', 'opacity-0');
             setTimeout(() => {
                 attentionModal.classList.add('invisible', 'pointer-events-none');
+                attentionModal.style.display = 'none';
             }, 400);
         });
 
         // Drawer Controls
         if (profileBadgeBtn) {
             profileBadgeBtn.addEventListener('click', () => {
-                accountModal.classList.remove('invisible', 'pointer-events-none');
-                accountModal.classList.add('opacity-100');
-                setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);
+                accountModal.style.display = 'flex';
+                setTimeout(() => {
+                    accountModal.classList.remove('invisible', 'pointer-events-none');
+                    accountModal.classList.add('opacity-100');
+                    setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);
+                }, 10);
             });
         }
 
@@ -610,6 +632,7 @@
                 accountModal.classList.replace('opacity-100', 'opacity-0');
                 setTimeout(() => {
                     accountModal.classList.add('invisible', 'pointer-events-none');
+                    accountModal.style.display = 'none';
                 }, 400);
             });
         }
@@ -617,7 +640,8 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            if (isPWA) return;
+            const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isStandaloneWindow) return;
             if (manualInstallBtn) {
                 manualInstallBtn.classList.remove('hidden');
                 manualInstallBtn.classList.add('inline-flex');
