@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MedTools">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedSchoolTools</title>
     
@@ -15,6 +11,7 @@
     
     <!-- Forces iOS standalone web shells into full screen immersion mode -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="MedTools">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Tailwind CSS for clean, rapid design styling -->
@@ -83,14 +80,24 @@
         }
 
         /* Modal specific exit animation overrides */
-        #attentionModal {
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        #attentionModal, #nameModal, #accountModal {
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.5s;
         }
-        #modalBox {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        #modalBox, #nameModalBox, #accountModalBox {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* Glint Shimmer Keyframe Animation */
+        /* Welcome Wink Advanced Fluid Splash Infrastructure */
+        #splashScreen {
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #splashContainer {
+            transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.1, 1), 
+                        opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: top right;
+        }
+
+        /* Glint Shimmer Keyframe Animations */
         @keyframes glint {
             0% { transform: translateX(-150%) rotate(45deg); }
             100% { transform: translateX(150%) rotate(45deg); }
@@ -102,6 +109,35 @@
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
             transform: translateX(-150%) rotate(45deg);
             animation: glint 2s infinite ease-in-out;
+        }
+        .green-glint {
+            position: relative;
+            overflow: hidden;
+        }
+        .green-glint::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 200%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            transform: translateX(-150%) rotate(45deg);
+            animation: glint 2.5s infinite ease-in-out;
+        }
+
+        /* Welcome Wink In-Place Opacity Toggle Keyframes */
+        @keyframes welcomeWinkOpenCircle {
+            0%, 40%, 60%, 100% { opacity: 1; }
+            45%, 55% { opacity: 0; }
+        }
+        @keyframes welcomeWinkClosedLine {
+            0%, 40%, 60%, 100% { opacity: 0; }
+            45%, 55% { opacity: 1; }
+        }
+
+        .splash-eye-open {
+            animation: welcomeWinkOpenCircle 1.8s infinite ease-in-out;
+        }
+        .splash-eye-closed {
+            animation: welcomeWinkClosedLine 1.8s infinite ease-in-out;
         }
 
         /* Responsive scaling tweaks for smaller viewpoints */
@@ -122,12 +158,50 @@
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100 opacity-0 transition-opacity duration-300">
 
-    <!-- Attention Notice Overlay Modal -->
-    <div id="attentionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-100">
-        <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-100">
-            <!-- Animated Laboratory/Testing Pulse Icon -->
+    <!-- Welcome Wink Flat Splash Screen Modal Layout -->
+    <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 invisible pointer-events-none">
+        <div class="flex flex-col items-center gap-4 text-center transform translate-y-4 opacity-0 transition-all duration-700" id="splashContainer">
+            <!-- Grand Enlarged Flat Splash Smiley Shared by Onboarding/Logins -->
+            <svg class="w-28 h-28 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 14s2 3 6 3 6-3 6-3" stroke-linecap="round"/>
+                <!-- Left Eye -->
+                <circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/>
+                
+                <!-- Right Eye Stacked Geometry for Pure Flat Line In-Place Winking -->
+                <circle id="splashCircleEye" class="splash-eye-open" cx="16" cy="9" r="1.2" fill="currentColor" stroke="none"/>
+                <line id="splashLineEye" class="splash-eye-closed" x1="14.6" y1="9" x2="17.4" y2="9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            <h2 id="splashGreeting" class="text-2xl font-bold tracking-tight text-slate-800">Welcome Back Dr. Friend!</h2>
+        </div>
+    </div>
+
+    <!-- Onboarding Step: Collect User Name Modal Configuration -->
+    <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
+        <div id="nameModalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-all duration-500 text-center">
+            <div class="flex flex-col items-center gap-3 mb-2">
+                <svg class="w-16 h-16 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 14s2 3 6 3 6-3 6-3" stroke-linecap="round"/>
+                    <circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/>
+                    <circle cx="16" cy="9" r="1.2" fill="currentColor" stroke="none"/>
+                </svg>
+                <h2 id="onboardingTitle" class="text-xl font-extrabold text-slate-900 tracking-tight">Welcome!</h2>
+            </div>
+            <p id="onboardingDescription" class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let''s Jump In!</p>
+            
+            <div id="onboardingForm" class="space-y-4">
+                <input type="text" id="usernameInput" placeholder="Enter Full Name" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all placeholder:text-slate-400">
+                <button id="saveNameBtn" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl shadow-sm transition-all text-sm tracking-wide cursor-pointer active:scale-95">
+                    Enter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PWA Beta Testing Attention Overlay Modal -->
+    <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
+        <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-95">
             <div class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative">
                 <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 relative">
@@ -135,161 +209,196 @@
                 </svg>
             </div>
             
-            <!-- Alert Text Details -->
             <h2 class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">Welcome!</h2>
             <p class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">
                 The App is Currently In Testing Phase, Open to All.<br>
                 <span class="text-emerald-600 font-bold">No Payments Required.</span>
             </p>
             
-            <!-- Okay Dismiss Button -->
-            <button id="closeModalBtn" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm hover:shadow-md transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-500">
+            <button id="closeModalBtn" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm hover:shadow-md transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none">
                 Acknowledge & Enter
             </button>
         </div>
     </div>
 
-    <!-- Top Header Layout -->
-    <header class="pt-12 pb-4 text-center">
-        <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent inline-block">
-            MedSchoolTools
-        </h1>
-        <p class="text-xs text-slate-400 mt-2 font-bold tracking-widest uppercase px-4">INTERACTIVE MEDICAL EDUCATION SUITE BY RISHU TIWARI</p>
-        
-        <!-- Manual PWA Installation Trigger Button (Hidden by Default) -->
-        <div class="mt-4 flex justify-center">
-            <button id="manualInstallBtn" class="hidden items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md hover:shadow-sky-400/30 transition-all duration-200 cursor-pointer focus:outline-none active:scale-95">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-                Install App
-            </button>
-        </div>
-    </header>
-
-    <!-- Interactive Carousel Showcase Section -->
-    <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
-        
-        <div class="relative w-full flex items-center justify-between py-6">
-            
-            <!-- Left Arrow Button with Enhanced Fluid Ambient Glow -->
-            <button id="prevBtn" class="absolute left-2 md:left-10 z-40 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-            </button>
-
-            <!-- Main Aurora Tracking Frame -->
-            <div class="carousel-container w-full overflow-hidden py-10">
-                <div id="carouselTrack" class="carousel-track">
-                    
-                    <!-- CARD 1: Darrow Yannet Simulator -->
-                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 mb-4 border border-sky-100/70">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Darrow Yannet Simulator</h3>
-                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Simulate and practice how shifting fluid and electrolyte balance impacts clinical fluid compartments.</p>
-                        </div>
-                        <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
-                    </div>
-
-                    <!-- CARD 2: Neural Gaze Lesion Simulator -->
-                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Neural Gaze Lesion Simulator</h3>
-                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Map complex brainstem and cortical lesions visually by examining abnormal oculomotor nerve eye pathways.</p>
-                        </div>
-                        <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
-                    </div>
-
-                    <!-- CARD 3: ImmuneCheck Breakers! -->
-                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">ImmuneCheck Breakers!</h3>
-                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Master pharmacology inhibitors by dissecting monoclonal antibody targeting blocks in immunology pathways.</p>
-                        </div>
-                        <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
-                    </div>
-
-                    <!-- CARD 4: Sarcomere Simulator -->
-                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Sarcomere Simulator</h3>
-                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Interact directly with actin and myosin filament cross-bridge binding sequences during muscle contraction.</p>
-                        </div>
-                        <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
-                    </div>
-
-                    <!-- CARD 5: Blood Flow Simulator -->
-                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.75 12h14.5M12 4.75v14.5" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Blood Flow Simulator</h3>
-                            <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Analyze resistance, vessel radius adjustments, and pressure gradients with real-time hemodynamic formulas.</p>
-                        </div>
-                        <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
-                    </div>
-
-                    <!-- CARD 6: Blank Placeholder Template -->
-                    <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-400 tracking-tight">In Development<h3>
-                            <p class="text-sm text-slate-400 mt-2.5 leading-relaxed line-clamp-3"></p>
-                        </div>
-                        <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">In Development</a>
-                    </div>
-
+    <!-- Interactive Profile Account Drawer Modal Layout -->
+    <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none">
+        <div id="accountModalBox" class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-all">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <h3 class="text-base font-bold text-slate-900">User Profile</h3>
+                <button id="closeAccountModalBtn" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="py-5 space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Hey There!</label>
+                    <p id="modalAccountName" class="text-base font-bold text-slate-800 mt-0.5">Dr. Friend</p>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Current Session</label>
+                    <div class="mt-1"><span class="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-emerald-600 px-2.5 py-0.5 bg-emerald-50 rounded-md border border-emerald-100/80 green-glint">Active</span></div>
+                </div>
+                <div class="bg-amber-50/80 rounded-xl border border-amber-200 p-3.5 text-amber-800 text-xs font-medium leading-relaxed shadow-inner">
+                    <b>TESTING PHASE:</b> This app is currently in its test phase. Some functionality may not be implemented.
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Right Arrow Button with Enhanced Fluid Ambient Glow -->
-            <button id="nextBtn" class="absolute right-2 md:right-10 z-40 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-            </button>
-
+    <!-- Main Workspace Page Container -->
+    <div id="mainWorkspace" class="opacity-0 transition-opacity duration-500 flex flex-col justify-between min-h-screen w-full relative">
+        
+        <!-- Profile Identity Badge (Top Right Absolute Interactive Layout) -->
+        <div id="profileBadgeBtn" class="absolute top-4 right-4 md:right-10 z-20 flex flex-col items-end text-right min-h-[40px] cursor-pointer hover:bg-slate-200/50 p-1.5 rounded-xl border border-transparent hover:border-slate-200/40 transition-all group">
+            <span id="headerUserName" class="text-xs font-bold text-slate-700 tracking-tight group-hover:text-sky-600"></span>
+            <span id="headerUserStatus" class="hidden items-center text-[10px] font-black uppercase tracking-widest text-emerald-600 px-2 py-0.5 bg-emerald-50 rounded-md border border-emerald-100/80 mt-0.5 green-glint">Logged In</span>
         </div>
 
-        <!-- Custom Active State Tracking Dots -->
-        <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
-    </main>
+        <!-- Top Header Layout -->
+        <header class="pt-12 pb-4 text-center relative">
+            <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent inline-block">
+                MedSchoolTools
+            </h1>
+            <p class="text-xs text-slate-400 mt-2 font-bold tracking-widest uppercase px-4">INTERACTIVE MEDICAL EDUCATION SUITE BY RISHU TIWARI</p>
+            
+            <!-- Manual PWA Installation Trigger Button -->
+            <div class="mt-4 flex justify-center">
+                <button id="manualInstallBtn" class="hidden items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md hover:shadow-sky-400/30 transition-all duration-200 cursor-pointer focus:outline-none active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Install App
+                </button>
+            </div>
+        </header>
 
-    <!-- Modern Styled Professional Footer Notification -->
-    <footer class="py-8 text-center border-t border-slate-200 bg-white/60 backdrop-blur-md">
-        <p class="text-[11px] tracking-widest text-slate-400 font-bold uppercase">
-            &copy; 2026 MedSchoolTools. All Rights Reserved by <span class="text-slate-700 font-extrabold transition-colors hover:text-sky-600">Rishu Tiwari</span>.
-        </p>
-    </footer>
+        <!-- Interactive Carousel Showcase Section -->
+        <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
+            
+            <div class="relative w-full flex items-center justify-between py-6">
+                
+                <!-- Left Arrow Button with Enhanced Fluid Ambient Glow -->
+                <button id="prevBtn" class="absolute left-2 md:left-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+
+                <!-- Main Aurora Tracking Frame -->
+                <div class="carousel-container w-full overflow-hidden py-10">
+                    <div id="carouselTrack" class="carousel-track">
+                        
+                        <!-- CARD 1: Darrow Yannet Simulator -->
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 mb-4 border border-sky-100/70">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">Darrow Yannet Simulator</h3>
+                                <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Simulate and practice how shifting fluid and electrolyte balance impacts clinical fluid compartments.</p>
+                            </div>
+                            <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        </div>
+
+                        <!-- CARD 2: Neural Gaze Lesion Simulator -->
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">Neural Gaze Lesion Simulator</h3>
+                                <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Map complex brainstem and cortical lesions visually by examining abnormal oculomotor nerve eye pathways.</p>
+                            </div>
+                            <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        </div>
+
+                        <!-- CARD 3: ImmuneCheck Breakers! -->
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">ImmuneCheck Breakers!</h3>
+                                <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Master pharmacology inhibitors by dissecting monoclonal antibody targeting blocks in immunology pathways.</p>
+                            </div>
+                            <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        </div>
+
+                        <!-- CARD 4: Sarcomere Simulator -->
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">Sarcomere Simulator</h3>
+                                <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Interact directly with actin and myosin filament cross-bridge binding sequences during muscle contraction.</p>
+                            </div>
+                            <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        </div>
+
+                        <!-- CARD 5: Blood Flow Simulator -->
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.75 12h14.5M12 4.75v14.5" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">Blood Flow Simulator</h3>
+                                <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Analyze resistance, vessel radius adjustments, and pressure gradients with real-time hemodynamic formulas.</p>
+                            </div>
+                            <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
+                        </div>
+
+                        <!-- CARD 6: Blank Placeholder Template -->
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-400 tracking-tight">In Development/h3>
+                                <p class="text-sm text-slate-400 mt-2.5 leading-relaxed line-clamp-3"></p>
+                            </div>
+                            <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">Launch</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right Arrow Button with Enhanced Fluid Ambient Glow -->
+                <button id="nextBtn" class="absolute right-2 md:right-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+
+            </div>
+
+            <!-- Custom Active State Tracking Dots -->
+            <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
+        </main>
+
+        <!-- Modern Styled Professional Footer Notification -->
+        <footer class="py-8 text-center border-t border-slate-200 bg-white/60 backdrop-blur-md">
+            <p class="text-[11px] tracking-widest text-slate-400 font-bold uppercase">
+                &copy; 2026 MedSchoolTools. All Rights Reserved by <span class="text-slate-700 font-extrabold transition-colors hover:text-sky-600">Rishu Tiwari</span>.
+            </p>
+        </footer>
+    </div>
 
     <!-- Operational Controllers Logic -->
     <script>
@@ -298,23 +407,157 @@
         const nextBtn = document.getElementById('nextBtn');
         const dotsContainer = document.getElementById('paginationDots');
         
-        // Modal Selectors
+        // Modal & Overlay Selectors
         const attentionModal = document.getElementById('attentionModal');
         const modalBox = document.getElementById('modalBox');
         const modalButton = document.getElementById('closeModalBtn');
         const modalTitle = document.querySelector('#attentionModal h2');
         const modalText = document.querySelector('#attentionModal p');
         const manualInstallBtn = document.getElementById('manualInstallBtn');
+        
+        // Splash, Workspace, Interactive Profile & Identity Onboarding Selectors
+        const mainWorkspace = document.getElementById('mainWorkspace');
+        const splashScreen = document.getElementById('splashScreen');
+        const splashContainer = document.getElementById('splashContainer');
+        const splashGreeting = document.getElementById('splashGreeting');
+        const nameModal = document.getElementById('nameModal');
+        const nameModalBox = document.getElementById('nameModalBox');
+        const usernameInput = document.getElementById('usernameInput');
+        const saveNameBtn = document.getElementById('saveNameBtn');
+        const headerUserName = document.getElementById('headerUserName');
+        const headerUserStatus = document.getElementById('headerUserStatus');
+        const profileBadgeBtn = document.getElementById('profileBadgeBtn');
+        const accountModal = document.getElementById('accountModal');
+        const accountModalBox = document.getElementById('accountModalBox');
+        const closeAccountModalBtn = document.getElementById('closeAccountModalBtn');
+        const modalAccountName = document.getElementById('modalAccountName');
+        const splashCircleEye = document.getElementById('splashCircleEye');
+        const splashLineEye = document.getElementById('splashLineEye');
 
         let cards = Array.from(track.children);
         let currentIndex = 0;
-
-        // Detect if the user arrived via the fast-track URL shortcut
-        const urlParams = new URLSearchParams(window.location.search);
-        const isFastTrack = urlParams.get('source') === 'fasttrack';
         let deferredPrompt;
 
-        // Listen for browser ready parameters
+        // Detect if user arrived via fast-track parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const isFastTrack = urlParams.get('source') === 'fasttrack';
+
+        // --- IDENTITY MANAGEMENT ENGINE ---
+        function getFirstName(fullName) {
+            if (!fullName) return "Friend";
+            return fullName.trim().split(' ')[0];
+        }
+
+        function updateHeaderUI(fullName) {
+            if (fullName && headerUserName && headerUserStatus) {
+                headerUserName.innerText = fullName;
+                modalAccountName.innerText = fullName; 
+                headerUserStatus.classList.remove('hidden');
+                headerUserStatus.classList.add('inline-flex');
+            }
+        }
+
+        // Run Welcome Wink Minimization Routine out to Top-Right profile badge area
+        function triggerWinkTransition(savedName) {
+            splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
+            
+            // Bring splash screen structure online instantly
+            splashScreen.classList.remove('invisible', 'pointer-events-none');
+            splashScreen.classList.add('opacity-100');
+            
+            // Float elements inward smoothly
+            setTimeout(() => {
+                splashContainer.classList.remove('translate-y-4', 'opacity-0');
+            }, 50);
+
+            // Execute shrinking minimization sequence down to top right corner
+            setTimeout(() => {
+                const targetX = window.innerWidth / 2 - 120;
+                const targetY = -(window.innerHeight / 2 - 50);
+
+                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
+                splashContainer.style.opacity = '0';
+                splashScreen.classList.add('opacity-0');
+                
+                mainWorkspace.classList.remove('opacity-0');
+
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                }, 600);
+            }, 2200);
+        }
+
+        // --- LIFECYCLE RUNTIME ROUTER ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('medTools_user');
+            document.body.classList.remove('opacity-0');
+
+            if (savedName) {
+                // Known User Session: Launch splash sequence immediately (0s delay)
+                updateHeaderUI(savedName);
+                triggerWinkTransition(savedName);
+            } else {
+                // New User Session: Prompt name onboarding modal setup instantly
+                mainWorkspace.classList.remove('opacity-0');
+                setTimeout(() => {
+                    nameModal.classList.remove('invisible', 'pointer-events-none');
+                    nameModal.classList.add('opacity-100');
+                    setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);
+                }, 400);
+            }
+        });
+
+        // Save Name Submission Callback Event (0ms delay to close, maps directly to main splash sequence)
+        saveNameBtn.addEventListener('click', () => {
+            const enteredName = usernameInput.value.trim();
+            if (!enteredName) {
+                usernameInput.classList.add('ring-2', 'ring-rose-400');
+                return;
+            }
+
+            // Persist parameters client side locally
+            localStorage.setItem('medTools_user', enteredName);
+            updateHeaderUI(enteredName);
+
+            // Drop identity configuration modal out of view instantly (0ms delay)
+            nameModalBox.classList.add('scale-95');
+            nameModal.classList.replace('opacity-100', 'opacity-0');
+            
+            setTimeout(() => {
+                nameModal.style.display = 'none';
+                
+                // Streamlined Flow: Hand directly over to standard Welcome Wink splash sequence
+                triggerWinkTransition(enteredName);
+                
+                // Schedule the operational testing alert banner right behind the splash sequence
+                setTimeout(() => {
+                    attentionModal.classList.remove('invisible', 'pointer-events-none');
+                    attentionModal.classList.add('opacity-100');
+                    setTimeout(() => modalBox.classList.remove('scale-95'), 50);
+                }, 2800);
+            }, 200);
+        });
+
+        // --- INTERACTIVE IDENTITY DRAWER OVERLAY CONTROLLERS ---
+        if (profileBadgeBtn) {
+            profileBadgeBtn.addEventListener('click', () => {
+                accountModal.classList.remove('invisible', 'pointer-events-none');
+                accountModal.classList.add('opacity-100');
+                setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);
+            });
+        }
+
+        if (closeAccountModalBtn) {
+            closeAccountModalBtn.addEventListener('click', () => {
+                accountModalBox.classList.add('scale-95');
+                accountModal.classList.replace('opacity-100', 'opacity-0');
+                setTimeout(() => {
+                    accountModal.classList.add('invisible', 'pointer-events-none');
+                }, 400);
+            });
+        }
+
+        // --- PWA FRAMEWORK SIGNAL SYSTEM ---
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -329,11 +572,11 @@
                 modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";
                 
                 modalText.innerHTML = `
-                    Get MedTools directly from your home screen!<br>
-                    <span class="text-slate-500 text-xs mt-2 block">OPTIMIZED FOR USE ON TABLETS & PCs</span>
+                    Get instant, one-tap access to your high-yield clinical simulators directly from your home screen.<br>
+                    <span class="text-slate-500 text-xs mt-2 block">⚡ Zero Storage Footprint • Full Screen Immersion • No Payments Required</span>
                 `;
 
-                modalButton.innerText = "Press to Install";
+                modalButton.innerText = "✨ Install Native App Shell";
                 modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-50 hover:to-indigo-50 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";
             }
         });
@@ -367,19 +610,19 @@
                     
                     modalText.innerHTML = `
                         Please check your home screen or application drawer for <b class="text-sky-600 font-extrabold text-base">"MedTools"</b>.<br>
-                        <span class="text-slate-500 text-xs mt-3 block font-semibold">Exit this browser window and check your home screen to start using MedSchoolTools!</span>
+                        <span class="text-slate-500 text-xs mt-3 block font-semibold">Exit this browser window to start using your full-screen standalone suite layout instantly.</span>
                     `;
 
                     modalButton.remove();
                     if (prevBtn) prevBtn.remove();
                     if (nextBtn) nextBtn.remove();
                     if (manualInstallBtn) manualInstallBtn.remove();
-                    return; // Lock execution thread here safely
+                    return; 
                 }
                 deferredPrompt = null;
             }
 
-            // Normal Window Dimissal Flow
+            // Normal Window Dismissal Flow
             modalBox.classList.add('scale-95');
             attentionModal.classList.replace('opacity-100', 'opacity-0');
             setTimeout(() => {
@@ -407,7 +650,7 @@
             deferredPrompt = null;
         });
 
-        // Construct interactive status dots
+        // --- CONSOLE SLIDER CAROUSEL TRACK MECHANICS ---
         function buildPagination() {
             dotsContainer.innerHTML = '';
             cards.forEach((_, index) => {
@@ -422,7 +665,6 @@
             });
         }
 
-        // Apply cyclical position mapping metrics
         function updateCarousel() {
             cards = Array.from(track.children); 
             const total = cards.length;
