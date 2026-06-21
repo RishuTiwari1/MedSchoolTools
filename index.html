@@ -442,8 +442,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const isFastTrack = urlParams.get('source') === 'fasttrack';
         
-        // Check structural display modes[span_0](start_span)[span_0](end_span)
-        const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('medTools_installed') === 'true';[span_1](start_span)[span_1](end_span)
+        // Check structural display modes[span_1](start_span)[span_1](end_span)
+        const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('medTools_installed') === 'true';[span_2](start_span)[span_2](end_span)
 
         // --- IDENTITY MANAGEMENT ENGINE ---
         function getFirstName(fullName) {
@@ -464,61 +464,87 @@
         function triggerWinkTransition(savedName) {
             splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
             
-            // Bring splash screen structure online instantly[span_2](start_span)[span_2](end_span)
-            splashScreen.classList.remove('invisible', 'pointer-events-none');[span_3](start_span)[span_3](end_span)
-            splashScreen.classList.add('opacity-100');[span_4](start_span)[span_4](end_span)
+            // Bring splash screen structure online instantly[span_3](start_span)[span_3](end_span)
+            splashScreen.classList.remove('invisible', 'pointer-events-none');[span_4](start_span)[span_4](end_span)
+            splashScreen.classList.add('opacity-100');[span_5](start_span)[span_5](end_span)
             
-            // Float elements inward smoothly[span_5](start_span)[span_5](end_span)
-            setTimeout(() => {[span_6](start_span)[span_6](end_span)
-                splashContainer.classList.remove('translate-y-4', 'opacity-0');[span_7](start_span)[span_7](end_span)
-            }, 50);[span_8](start_span)[span_8](end_span)
+            // Float elements inward smoothly[span_6](start_span)[span_6](end_span)
+            setTimeout(() => {[span_7](start_span)[span_7](end_span)
+                splashContainer.classList.remove('translate-y-4', 'opacity-0');[span_8](start_span)[span_8](end_span)
+            }, 50);[span_9](start_span)[span_9](end_span)
 
-            // Execute shrinking minimization sequence down to top right corner[span_9](start_span)[span_9](end_span)
-            setTimeout(() => {[span_10](start_span)[span_10](end_span)
-                const targetX = window.innerWidth / 2 - 120;[span_11](start_span)[span_11](end_span)
-                const targetY = -(window.innerHeight / 2 - 50);[span_12](start_span)[span_12](end_span)
+            // Execute shrinking minimization sequence down to top right corner[span_10](start_span)[span_10](end_span)
+            setTimeout(() => {[span_11](start_span)[span_11](end_span)
+                const targetX = window.innerWidth / 2 - 120;[span_12](start_span)[span_12](end_span)
+                const targetY = -(window.innerHeight / 2 - 50);[span_13](start_span)[span_13](end_span)
 
-                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;[span_13](start_span)[span_13](end_span)
-                splashContainer.style.opacity = '0';[span_14](start_span)[span_14](end_span)
-                splashScreen.classList.add('opacity-0');[span_15](start_span)[span_15](end_span)
+                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;[span_14](start_span)[span_14](end_span)
+                splashContainer.style.opacity = '0';[span_15](start_span)[span_15](end_span)
+                splashScreen.classList.add('opacity-0');[span_16](start_span)[span_16](end_span)
                 
-                mainWorkspace.classList.remove('opacity-0');[span_16](start_span)[span_16](end_span)
+                mainWorkspace.classList.remove('opacity-0');[span_17](start_span)[span_17](end_span)
 
-                setTimeout(() => {[span_17](start_span)[span_17](end_span)
-                    splashScreen.style.display = 'none';[span_18](start_span)[span_18](end_span)
-                }, 600);[span_19](start_span)[span_19](end_span)
-            }, 2200);[span_20](start_span)[span_20](end_span)
+                setTimeout(() => {[span_18](start_span)[span_18](end_span)
+                    splashScreen.style.display = 'none';[span_19](start_span)[span_19](end_span)
+                }, 600);[span_20](start_span)[span_20](end_span)
+            }, 2200);[span_21](start_span)[span_21](end_span)
         }
 
         // --- LIFECYCLE RUNTIME ROUTER ---
         window.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('medTools_user');
-            document.body.classList.remove('opacity-0');[span_21](start_span)[span_21](end_span)
+            
+            // Crucial Fix: Immediately make the body visible so the fast-track state can display things
+            document.body.classList.remove('opacity-0');[span_22](start_span)[span_22](end_span)
 
-            if (savedName) {
-                // Scenario A: User name exists. Run Welcome Wink splash immediately!
-                updateHeaderUI(savedName);[span_22](start_span)[span_22](end_span)
-                triggerWinkTransition(savedName);[span_23](start_span)[span_23](end_span)
-            } else {
-                // Scenario B: Name is missing.
-                if (isStandaloneWindow) {
-                    // Running inside the PWA container for the first time: Force Onboarding!
-                    mainWorkspace.classList.remove('opacity-0');[span_24](start_span)[span_24](end_span)
-                    setTimeout(() => {[span_25](start_span)[span_25](end_span)
-                        nameModal.classList.remove('invisible', 'pointer-events-none');[span_26](start_span)[span_26](end_span)
-                        nameModal.classList.add('opacity-100');[span_27](start_span)[span_27](end_span)
-                        setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);[span_28](start_span)[span_28](end_span)
-                    }, 400);[span_29](start_span)[span_29](end_span)
+            if (isStandaloneWindow) {
+                // If running inside PWA standalone mode container window[span_23](start_span)[span_23](end_span)
+                if (savedName) {
+                    updateHeaderUI(savedName);[span_24](start_span)[span_24](end_span)
+                    triggerWinkTransition(savedName);[span_25](start_span)[span_25](end_span)
                 } else {
-                    // Running in standard web layout: Show main elements, but hide onboarding IF fasttrack takes priority
-                    mainWorkspace.classList.remove('opacity-0');[span_30](start_span)[span_30](end_span)
-                    if (!isFastTrack) {[span_31](start_span)[span_31](end_span)
-                        setTimeout(() => {[span_32](start_span)[span_32](end_span)
-                            nameModal.classList.remove('invisible', 'pointer-events-none');[span_33](start_span)[span_33](end_span)
-                            nameModal.classList.add('opacity-100');[span_34](start_span)[span_34](end_span)
-                            setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);[span_35](start_span)[span_35](end_span)
-                        }, 400);[span_36](start_span)[span_36](end_span)
-                    }[span_37](start_span)[span_37](end_span)
+                    // First time PWA app shell boot up: Present the onboarding frame natively[span_26](start_span)[span_26](end_span)
+                    mainWorkspace.classList.remove('opacity-0');[span_27](start_span)[span_27](end_span)
+                    setTimeout(() => {[span_28](start_span)[span_28](end_span)
+                        nameModal.classList.remove('invisible', 'pointer-events-none');[span_29](start_span)[span_29](end_span)
+                        nameModal.classList.add('opacity-100');[span_30](start_span)[span_30](end_span)
+                        setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);[span_31](start_span)[span_31](end_span)
+                    }, 400);[span_32](start_span)[span_32](end_span)
+                }
+                return; // Early return to halt browser web layout popups[span_33](start_span)[span_33](end_span)
+            }
+
+            // Standard Web Browser Viewports (Not saved to home screen yet)
+            if (isFastTrack) {
+                // Secure baseline workspace background visibility frame
+                mainWorkspace.classList.remove('opacity-0');[span_34](start_span)[span_34](end_span)
+                
+                // Set custom app installation layout variables on attention modal
+                modalTitle.innerText = "Install MedSchoolTools Suite";[span_35](start_span)[span_35](end_span)
+                modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";[span_36](start_span)[span_36](end_span)
+                modalText.innerHTML = `[span_37](start_span)[span_37](end_span)
+                    Get instant, one-tap access to your high-yield clinical simulators directly from your home screen.<br>[span_38](start_span)[span_38](end_span)
+                    <span class="text-slate-500 text-xs mt-2 block">⚡ Zero Storage Footprint • Full Screen Immersion • No Payments Required</span>[span_39](start_span)[span_39](end_span)
+                `;[span_40](start_span)[span_40](end_span)
+                modalButton.innerText = "✨ Install Native App Shell";[span_41](start_span)[span_41](end_span)
+                modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-50 hover:to-indigo-50 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";[span_42](start_span)[span_42](end_span)
+
+                // Bring the prompt into display focus natively without waiting for the delayed listener
+                attentionModal.classList.remove('invisible', 'pointer-events-none');[span_43](start_span)[span_43](end_span)
+                attentionModal.classList.add('opacity-100');[span_44](start_span)[span_44](end_span)
+                setTimeout(() => modalBox.classList.remove('scale-95'), 50);[span_45](start_span)[span_45](end_span)
+            } else {
+                // Plain Browser Landing Profile
+                mainWorkspace.classList.remove('opacity-0');[span_46](start_span)[span_46](end_span)
+                if (savedName) {
+                    updateHeaderUI(savedName);[span_47](start_span)[span_47](end_span)
+                    triggerWinkTransition(savedName);[span_48](start_span)[span_48](end_span)
+                } else {
+                    setTimeout(() => {[span_49](start_span)[span_49](end_span)
+                        nameModal.classList.remove('invisible', 'pointer-events-none');[span_50](start_span)[span_50](end_span)
+                        nameModal.classList.add('opacity-100');[span_51](start_span)[span_51](end_span)
+                        setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);[span_52](start_span)[span_52](end_span)
+                    }, 400);[span_53](start_span)[span_53](end_span)
                 }
             }
         });
@@ -531,170 +557,153 @@
                 return;
             }
 
-            localStorage.setItem('medTools_user', enteredName);[span_38](start_span)[span_38](end_span)
-            updateHeaderUI(enteredName);[span_39](start_span)[span_39](end_span)
+            localStorage.setItem('medTools_user', enteredName);[span_54](start_span)[span_54](end_span)
+            updateHeaderUI(enteredName);[span_55](start_span)[span_55](end_span)
 
-            // Drop identity configuration modal out of view instantly (0ms delay)[span_40](start_span)[span_40](end_span)
-            nameModalBox.classList.add('scale-95');[span_41](start_span)[span_41](end_span)
-            nameModal.classList.replace('opacity-100', 'opacity-0');[span_42](start_span)[span_42](end_span)
+            // Drop identity configuration modal out of view instantly (0ms delay)[span_56](start_span)[span_56](end_span)
+            nameModalBox.classList.add('scale-95');[span_57](start_span)[span_57](end_span)
+            nameModal.classList.replace('opacity-100', 'opacity-0');[span_58](start_span)[span_58](end_span)
             
-            setTimeout(() => {[span_43](start_span)[span_43](end_span)
-                nameModal.style.display = 'none';[span_44](start_span)[span_44](end_span)
+            setTimeout(() => {[span_59](start_span)[span_59](end_span)
+                nameModal.style.display = 'none';[span_60](start_span)[span_60](end_span)
                 
-                // Hand directly over to standard Welcome Wink splash sequence[span_45](start_span)[span_45](end_span)
-                triggerWinkTransition(enteredName);[span_46](start_span)[span_46](end_span)
+                // Hand directly over to standard Welcome Wink splash sequence[span_61](start_span)[span_61](end_span)
+                triggerWinkTransition(enteredName);[span_62](start_span)[span_62](end_span)
                 
                 // Only show testing notice banner if they ARE NOT inside the installed PWA
                 if (!isStandaloneWindow) {
-                    setTimeout(() => {[span_47](start_span)[span_47](end_span)
-                        attentionModal.classList.remove('invisible', 'pointer-events-none');[span_48](start_span)[span_48](end_span)
-                        attentionModal.classList.add('opacity-100');[span_49](start_span)[span_49](end_span)
-                        setTimeout(() => modalBox.classList.remove('scale-95'), 50);[span_50](start_span)[span_50](end_span)
-                    }, 2800);[span_51](start_span)[span_51](end_span)
+                    setTimeout(() => {[span_63](start_span)[span_63](end_span)
+                        attentionModal.classList.remove('invisible', 'pointer-events-none');[span_64](start_span)[span_64](end_span)
+                        attentionModal.classList.add('opacity-100');[span_65](start_span)[span_65](end_span)
+                        setTimeout(() => modalBox.classList.remove('scale-95'), 50);[span_66](start_span)[span_66](end_span)
+                    }, 2800);[span_67](start_span)[span_67](end_span)
                 }
-            }, 200);[span_52](start_span)[span_52](end_span)
+            }, 200);[span_68](start_span)[span_68](end_span)
         });
 
         // --- INTERACTIVE IDENTITY DRAWER OVERLAY CONTROLLERS ---
         if (profileBadgeBtn) {
             profileBadgeBtn.addEventListener('click', () => {
-                accountModal.classList.remove('invisible', 'pointer-events-none');[span_53](start_span)[span_53](end_span)
-                accountModal.classList.add('opacity-100');[span_54](start_span)[span_54](end_span)
-                setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);[span_55](start_span)[span_55](end_span)
+                accountModal.classList.remove('invisible', 'pointer-events-none');[span_69](start_span)[span_69](end_span)
+                accountModal.classList.add('opacity-100');[span_70](start_span)[span_70](end_span)
+                setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);[span_71](start_span)[span_71](end_span)
             });
         }
 
         if (closeAccountModalBtn) {
             closeAccountModalBtn.addEventListener('click', () => {
-                accountModalBox.classList.add('scale-95');[span_56](start_span)[span_56](end_span)
-                accountModal.classList.replace('opacity-100', 'opacity-0');[span_57](start_span)[span_57](end_span)
-                setTimeout(() => {[span_58](start_span)[span_58](end_span)
-                    accountModal.classList.add('invisible', 'pointer-events-none');[span_59](start_span)[span_59](end_span)
-                }, 400);[span_60](start_span)[span_60](end_span)
+                accountModalBox.classList.add('scale-95');[span_72](start_span)[span_72](end_span)
+                accountModal.classList.replace('opacity-100', 'opacity-0');[span_73](start_span)[span_73](end_span)
+                setTimeout(() => {[span_74](start_span)[span_74](end_span)
+                    accountModal.classList.add('invisible', 'pointer-events-none');[span_75](start_span)[span_75](end_span)
+                }, 400);[span_76](start_span)[span_76](end_span)
             });
         }
 
         // --- PWA FRAMEWORK SIGNAL SYSTEM ---
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();[span_61](start_span)[span_61](end_span)
-            deferredPrompt = e;[span_62](start_span)[span_62](end_span)
+            e.preventDefault();[span_77](start_span)[span_77](end_span)
+            deferredPrompt = e;[span_78](start_span)[span_78](end_span)
             
             // Block setup forms entirely if they are currently active inside the standalone app structure
-            if (isStandaloneWindow) return;[span_63](start_span)[span_63](end_span)
+            if (isStandaloneWindow) return;[span_79](start_span)[span_79](end_span)
 
-            if (manualInstallBtn) {[span_64](start_span)[span_64](end_span)
-                manualInstallBtn.classList.remove('hidden');[span_65](start_span)[span_65](end_span)
-                manualInstallBtn.classList.add('inline-flex');[span_66](start_span)[span_66](end_span)
-            }[span_67](start_span)[span_67](end_span)
-
-            // Prioritize Installation over Onboarding: Force the install dialog on fasttrack arrival[span_68](start_span)[span_68](end_span)
-            if (isFastTrack) {[span_69](start_span)[span_69](end_span)
-                // ENFORCED RULE: Keep name modal completely offline until installation window lifecycle settles[span_70](start_span)[span_70](end_span)
-                nameModal.classList.add('invisible', 'pointer-events-none');[span_71](start_span)[span_71](end_span)
-                nameModal.style.display = 'none';[span_72](start_span)[span_72](end_span)
-
-                modalTitle.innerText = "Install MedSchoolTools Suite";[span_73](start_span)[span_73](end_span)
-                modalTitle.className = "text-2xl font-black text-slate-900 tracking-tight mb-2 bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent";[span_74](start_span)[span_74](end_span)
-                
-                modalText.innerHTML = `[span_75](start_span)[span_75](end_span)
-                    Get instant, one-tap access to your high-yield clinical simulators directly from your home screen.<br>[span_76](start_span)[span_76](end_span)
-                    <span class="text-slate-500 text-xs mt-2 block">⚡ Zero Storage Footprint • Full Screen Immersion • No Payments Required</span>[span_77](start_span)[span_77](end_span)
-                `;[span_78](start_span)[span_78](end_span)
-
-                modalButton.innerText = "✨ Install Native App Shell";[span_79](start_span)[span_79](end_span)
-                modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-50 hover:to-indigo-50 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 transform hover:-translate-y-0.5 animate-pulse";[span_80](start_span)[span_80](end_span)
-
-                // Throw installation notice banner popup forward immediately[span_81](start_span)[span_81](end_span)
-                attentionModal.classList.remove('invisible', 'pointer-events-none');[span_82](start_span)[span_82](end_span)
-                attentionModal.classList.add('opacity-100');[span_83](start_span)[span_83](end_span)
-                setTimeout(() => modalBox.classList.remove('scale-95'), 50);[span_84](start_span)[span_84](end_span)
-            }[span_85](start_span)[span_85](end_span)
+            if (manualInstallBtn) {[span_80](start_span)[span_80](end_span)
+                manualInstallBtn.classList.remove('hidden');[span_81](start_span)[span_81](end_span)
+                manualInstallBtn.classList.add('inline-flex');[span_82](start_span)[span_82](end_span)
+            }[span_83](start_span)[span_83](end_span)
         });
 
         // Combined Trigger Logic for the Modal Call-To-Action Button
         modalButton.addEventListener('click', async () => {
-            if (isFastTrack && deferredPrompt) {[span_86](start_span)[span_86](end_span)
-                deferredPrompt.prompt();[span_87](start_span)[span_87](end_span)
-                const { outcome } = await deferredPrompt.userChoice;[span_88](start_span)[span_88](end_span)[span_89](start_span)[span_89](end_span)
-                if (outcome === 'accepted') {[span_90](start_span)[span_90](end_span)
-                    deferredPrompt = null;[span_91](start_span)[span_91](end_span)
-                    localStorage.setItem('medTools_installed', 'true'); // Persist installation checkpoint[span_92](start_span)[span_92](end_span)[span_93](start_span)[span_93](end_span)
-                    // Freeze viewport interface loop into immersive background lockscreen setup[span_94](start_span)[span_94](end_span)
-                    attentionModal.style.display = 'flex';[span_95](start_span)[span_95](end_span)
-                    attentionModal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl opacity-100 transition-all duration-500";[span_96](start_span)[span_96](end_span)
-                    modalBox.className = "w-full max-w-sm bg-white/90 border border-sky-400 p-8 text-center shadow-2xl rounded-2xl relative overflow-hidden glint-overlay scale-100 transition-all duration-300";[span_97](start_span)[span_97](end_span)[span_98](start_span)[span_98](end_span)
-                    const iconContainer = modalBox.querySelector('.mx-auto');[span_99](start_span)[span_99](end_span)
-                    if (iconContainer) {[span_100](start_span)[span_100](end_span)
-                        iconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-500 mb-5 border border-sky-200 relative animate-bounce";[span_101](start_span)[span_101](end_span)
-                        iconContainer.innerHTML = `[span_102](start_span)[span_102](end_span)
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 animate-spin">[span_103](start_span)[span_103](end_span)
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />[span_104](start_span)[span_104](end_span)
-                            </svg>[span_105](start_span)[span_105](end_span)
-                        `;[span_106](start_span)[span_106](end_span)
-                    }[span_107](start_span)[span_107](end_span)
+            if (isFastTrack && deferredPrompt) {[span_84](start_span)[span_84](end_span)
+                deferredPrompt.prompt();[span_85](start_span)[span_85](end_span)
+                const { outcome } = await deferredPrompt.userChoice;[span_86](start_span)[span_86](end_span)
+                
+                if (outcome === 'accepted') {[span_87](start_span)[span_87](end_span)
+                    deferredPrompt = null;[span_88](start_span)[span_88](end_span)
+                    localStorage.setItem('medTools_installed', 'true'); // Persist installation checkpoint[span_89](start_span)[span_89](end_span)
+                    
+                    // Freeze viewport interface loop into immersive background lockscreen setup[span_90](start_span)[span_90](end_span)
+                    attentionModal.style.display = 'flex';[span_91](start_span)[span_91](end_span)
+                    attentionModal.className = "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl opacity-100 transition-all duration-500";[span_92](start_span)[span_92](end_span)
+                    modalBox.className = "w-full max-w-sm bg-white/90 border border-sky-400 p-8 text-center shadow-2xl rounded-2xl relative overflow-hidden glint-overlay scale-100 transition-all duration-300";[span_93](start_span)[span_93](end_span)
+                    
+                    const iconContainer = modalBox.querySelector('.mx-auto');[span_94](start_span)[span_94](end_span)
+                    if (iconContainer) {[span_95](start_span)[span_95](end_span)
+                        iconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-500 mb-5 border border-sky-200 relative animate-bounce";[span_96](start_span)[span_96](end_span)
+                        iconContainer.innerHTML = `[span_97](start_span)[span_97](end_span)
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 animate-spin">[span_98](start_span)[span_98](end_span)
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />[span_99](start_span)[span_99](end_span)
+                            </svg>[span_100](start_span)[span_100](end_span)
+                        `;[span_101](start_span)[span_101](end_span)
+                    }[span_102](start_span)[span_102](end_span)
 
-                    modalTitle.innerText = "Installing Application...";[span_108](start_span)[span_108](end_span)
-                    modalTitle.className = "text-xl font-black text-slate-900 tracking-tight mb-2";[span_109](start_span)[span_109](end_span)[span_110](start_span)[span_110](end_span)
-                    modalText.innerHTML = `[span_111](start_span)[span_111](end_span)
-                        Please check your home screen or application drawer for <b class="text-sky-600 font-extrabold text-base">"MedTools"</b>.<br>[span_112](start_span)[span_112](end_span)
-                        <span class="text-slate-500 text-xs mt-3 block font-semibold">Exit this browser window to start using your full-screen standalone suite layout instantly.</span>[span_113](start_span)[span_113](end_span)
-                    `;[span_114](start_span)[span_114](end_span)
+                    modalTitle.innerText = "Installing Application...";[span_103](start_span)[span_103](end_span)
+                    modalTitle.className = "text-xl font-black text-slate-900 tracking-tight mb-2";[span_104](start_span)[span_104](end_span)
+                    
+                    modalText.innerHTML = `[span_105](start_span)[span_105](end_span)
+                        Please check your home screen or application drawer for <b class="text-sky-600 font-extrabold text-base">"MedTools"</b>.<br>[span_106](start_span)[span_106](end_span)
+                        <span class="text-slate-500 text-xs mt-3 block font-semibold">Exit this browser window to start using your full-screen standalone suite layout instantly.</span>[span_107](start_span)[span_107](end_span)
+                    `;[span_108](start_span)[span_108](end_span)
 
-                    modalButton.remove();[span_115](start_span)[span_115](end_span)
-                    if (prevBtn) prevBtn.remove();[span_116](start_span)[span_116](end_span)
-                    if (nextBtn) nextBtn.remove();[span_117](start_span)[span_117](end_span)
-                    if (manualInstallBtn) manualInstallBtn.remove();[span_118](start_span)[span_118](end_span)
-                    return;[span_119](start_span)[span_119](end_span)
-                }[span_120](start_span)[span_120](end_span)[span_121](start_span)[span_121](end_span)
-                // If they reject or close the install modal on fasttrack, fallback cleanly to prompt identity[span_122](start_span)[span_122](end_span)
-                deferredPrompt = null;[span_123](start_span)[span_123](end_span)
-                attentionModal.style.display = 'none';[span_124](start_span)[span_124](end_span)
-                if (!localStorage.getItem('medTools_user')) {[span_125](start_span)[span_125](end_span)
-                    nameModal.style.display = 'flex';[span_126](start_span)[span_126](end_span)
-                    nameModal.classList.remove('invisible', 'pointer-events-none');[span_127](start_span)[span_127](end_span)
-                    nameModal.classList.add('opacity-100');[span_128](start_span)[span_128](end_span)
-                    nameModalBox.classList.remove('scale-95');[span_129](start_span)[span_129](end_span)
-                }[span_130](start_span)[span_130](end_span)
-                return;[span_131](start_span)[span_131](end_span)
+                    modalButton.remove();[span_109](start_span)[span_109](end_span)
+                    if (prevBtn) prevBtn.remove();[span_110](start_span)[span_110](end_span)
+                    if (nextBtn) nextBtn.remove();[span_111](start_span)[span_111](end_span)
+                    if (manualInstallBtn) manualInstallBtn.remove();[span_112](start_span)[span_112](end_span)
+                    return;[span_113](start_span)[span_113](end_span)
+                }[span_114](start_span)[span_114](end_span)
+                
+                // If they reject or close the install modal on fasttrack, fallback cleanly to prompt identity[span_115](start_span)[span_115](end_span)
+                deferredPrompt = null;[span_116](start_span)[span_116](end_span)
+                attentionModal.style.display = 'none';[span_117](start_span)[span_117](end_span)
+                if (!localStorage.getItem('medTools_user')) {[span_118](start_span)[span_118](end_span)
+                    nameModal.style.display = 'flex';[span_119](start_span)[span_119](end_span)
+                    nameModal.classList.remove('invisible', 'pointer-events-none');[span_120](start_span)[span_120](end_span)
+                    nameModal.classList.add('opacity-100');[span_121](start_span)[span_121](end_span)
+                    nameModalBox.classList.remove('scale-95');[span_122](start_span)[span_122](end_span)
+                }[span_123](start_span)[span_123](end_span)
+                return;[span_124](start_span)[span_124](end_span)
             }
 
-            // Normal Acknowledge Alert Window Dismissal Flow[span_132](start_span)[span_132](end_span)
+            // Normal Acknowledge Alert Window Dismissal Flow[span_125](start_span)[span_125](end_span)
             modalBox.classList.add('scale-95');
-            attentionModal.classList.replace('opacity-100', 'opacity-0');[span_133](start_span)[span_133](end_span)
-            setTimeout(() => {[span_134](start_span)[span_134](end_span)
-                attentionModal.style.display = 'none';[span_135](start_span)[span_135](end_span)[span_136](start_span)[span_136](end_span)
-                // If onboarding data is missing upon standard alert closure, initiate it now[span_137](start_span)[span_137](end_span)
+            attentionModal.classList.replace('opacity-100', 'opacity-0');[span_126](start_span)[span_126](end_span)
+            setTimeout(() => {[span_127](start_span)[span_127](end_span)
+                attentionModal.style.display = 'none';[span_128](start_span)[span_128](end_span)
+                
+                // If onboarding data is missing upon standard alert closure, initiate it now[span_129](start_span)[span_129](end_span)
                 if (!localStorage.getItem('medTools_user')) {
-                    nameModal.classList.remove('invisible', 'pointer-events-none');[span_138](start_span)[span_138](end_span)
-                    nameModal.classList.add('opacity-100');[span_139](start_span)[span_139](end_span)
-                    nameModalBox.classList.remove('scale-95');[span_140](start_span)[span_140](end_span)
-                }[span_141](start_span)[span_141](end_span)
-            }, 400);[span_142](start_span)[span_142](end_span)
+                    nameModal.classList.remove('invisible', 'pointer-events-none');[span_130](start_span)[span_130](end_span)
+                    nameModal.classList.add('opacity-100');[span_131](start_span)[span_131](end_span)
+                    nameModalBox.classList.remove('scale-95');[span_132](start_span)[span_132](end_span)
+                }[span_133](start_span)[span_133](end_span)
+            }, 400);[span_134](start_span)[span_134](end_span)
         });
 
-        // Backup Listener for Header Install Button Frame[span_143](start_span)[span_143](end_span)
-        if (manualInstallBtn) {[span_144](start_span)[span_144](end_span)
-            manualInstallBtn.addEventListener('click', async () => {[span_145](start_span)[span_145](end_span)
-                if (!deferredPrompt) return;[span_146](start_span)[span_146](end_span)
-                deferredPrompt.prompt();[span_147](start_span)[span_147](end_span)
-                const { outcome } = await deferredPrompt.userChoice;[span_148](start_span)[span_148](end_span)
-                if (outcome === 'accepted') {[span_149](start_span)[span_149](end_span)
-                    localStorage.setItem('medTools_installed', 'true');[span_150](start_span)[span_150](end_span)
-                }[span_151](start_span)[span_151](end_span)
-                deferredPrompt = null;[span_152](start_span)[span_152](end_span)
-                manualInstallBtn.classList.remove('inline-flex');[span_153](start_span)[span_153](end_span)
-                manualInstallBtn.classList.add('hidden');[span_154](start_span)[span_154](end_span)
-            });[span_155](start_span)[span_155](end_span)
-        }[span_156](start_span)[span_156](end_span)
+        // Backup Listener for Header Install Button Frame[span_135](start_span)[span_135](end_span)
+        if (manualInstallBtn) {[span_136](start_span)[span_136](end_span)
+            manualInstallBtn.addEventListener('click', async () => {[span_137](start_span)[span_137](end_span)
+                if (!deferredPrompt) return;[span_138](start_span)[span_138](end_span)
+                deferredPrompt.prompt();[span_139](start_span)[span_139](end_span)
+                const { outcome } = await deferredPrompt.userChoice;[span_140](start_span)[span_140](end_span)
+                if (outcome === 'accepted') {[span_141](start_span)[span_141](end_span)
+                    localStorage.setItem('medTools_installed', 'true');[span_142](start_span)[span_142](end_span)
+                }[span_143](start_span)[span_143](end_span)
+                deferredPrompt = null;[span_144](start_span)[span_144](end_span)
+                manualInstallBtn.classList.remove('inline-flex');[span_145](start_span)[span_145](end_span)
+                manualInstallBtn.classList.add('hidden');[span_146](start_span)[span_146](end_span)
+            });[span_147](start_span)[span_147](end_span)
+        }[span_148](start_span)[span_148](end_span)
 
-        window.addEventListener('appinstalled', () => {[span_157](start_span)[span_157](end_span)
-            localStorage.setItem('medTools_installed', 'true');[span_158](start_span)[span_158](end_span)
-            if (manualInstallBtn) {[span_159](start_span)[span_159](end_span)
-                manualInstallBtn.classList.remove('inline-flex');[span_160](start_span)[span_160](end_span)
-                manualInstallBtn.classList.add('hidden');[span_161](start_span)[span_161](end_span)
-            }[span_162](start_span)[span_162](end_span)
-            deferredPrompt = null;[span_163](start_span)[span_163](end_span)
-        });[span_164](start_span)[span_164](end_span)
+        window.addEventListener('appinstalled', () => {[span_149](start_span)[span_149](end_span)
+            localStorage.setItem('medTools_installed', 'true');[span_150](start_span)[span_150](end_span)
+            if (manualInstallBtn) {[span_151](start_span)[span_151](end_span)
+                manualInstallBtn.classList.remove('inline-flex');[span_152](start_span)[span_152](end_span)
+                manualInstallBtn.classList.add('hidden');[span_153](start_span)[span_153](end_span)
+            }[span_154](start_span)[span_154](end_span)
+            deferredPrompt = null;[span_155](start_span)[span_155](end_span)
+        });[span_156](start_span)[span_156](end_span)
 
         // --- CONSOLE SLIDER CAROUSEL TRACK MECHANICS ---
         function buildPagination() {
@@ -711,7 +720,6 @@
             });
         }
 
-        // Apply dynamic adjacent transform loops
         function updateCarousel() {
             cards = Array.from(track.children); 
             const total = cards.length;
