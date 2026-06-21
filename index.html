@@ -156,7 +156,7 @@
         </div>
     </div>
 
-    <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none transition-opacity duration-500">
+    <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none transition-all duration-500">
         <div id="nameModalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-transform duration-500 text-center">
             <div class="flex flex-col items-center gap-3 mb-2">
                 <svg class="w-16 h-16 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -164,38 +164,32 @@
                     <circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                     <circle cx="16" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                 </svg>
-                <h2 id="onboardingTitle" class="text-xl font-extrabold text-slate-900 tracking-tight">Welcome!</h2>
+                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Welcome!</h2>
             </div>
-            <p id="onboardingDescription" class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let's Jump In!</p>
+            <p class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let's Jump In!</p>
             
-            <div id="onboardingForm" class="space-y-4">
+            <div class="space-y-4">
                 <input type="text" id="usernameInput" placeholder="Enter Full Name" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all placeholder:text-slate-400">
                 <button id="saveNameBtn" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl shadow-sm transition-all text-sm tracking-wide cursor-pointer active:scale-95">
-                    Enter
+                    Enter Application
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none transition-opacity duration-500">
+    <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none transition-all duration-500">
         <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-95 transition-transform duration-500">
             <div id="modalIconContainer" class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative">
-                <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 relative">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" />
-                </svg>
-            </div>
-            
+                </div>
             <h2 id="modalTitle" class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">Notice</h2>
             <p id="modalText" class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">Please review the details below.</p>
-            
             <button id="closeModalBtn" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none">
                 Acknowledge
             </button>
         </div>
     </div>
 
-    <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none transition-opacity duration-500">
+    <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none transition-all duration-500">
         <div id="accountModalBox" class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-transform duration-500">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900">User Profile</h3>
@@ -223,9 +217,19 @@
 
     <div id="mainWorkspace" class="flex flex-col justify-between min-h-screen w-full relative transition-opacity duration-500 opacity-0">
         
-        <div id="profileBadgeBtn" class="absolute top-4 right-4 md:right-10 z-20 flex flex-col items-end text-right min-h-[40px] cursor-pointer hover:bg-slate-200/50 p-1.5 rounded-xl border border-transparent hover:border-slate-200/40 transition-all group">
-            <span id="headerUserName" class="text-xs font-bold text-slate-700 tracking-tight group-hover:text-sky-600"></span>
-            <span id="headerUserStatus" class="hidden items-center text-[10px] font-black uppercase tracking-widest text-emerald-600 px-2 py-0.5 bg-emerald-50 rounded-md border border-emerald-100/80 mt-0.5 green-glint">Logged In</span>
+        <div id="profileBadgeBtn" class="absolute top-4 right-4 md:right-10 z-20 cursor-pointer transition-all">
+            
+            <div id="setupProfileCTA" class="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-500 text-white rounded-xl shadow-[0_0_15px_rgba(14,165,233,0.5)] animate-pulse font-bold text-xs uppercase tracking-wide hover:scale-105 transition-transform border border-sky-400/50">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-yellow-300">
+                  <path fill-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.625 2.625 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.625 2.625 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5zM16.5 15a.75.75 0 01.712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 010 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 01-1.422 0l-.395-1.183a1.5 1.5 0 00-.948-.948l-1.183-.395a.75.75 0 010-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0116.5 15z" clip-rule="evenodd" />
+                </svg>
+                Complete Profile
+            </div>
+
+            <div id="registeredProfile" class="hidden flex-col items-end text-right hover:bg-slate-200/50 p-1.5 rounded-xl border border-transparent hover:border-slate-200/40 group">
+                <span id="headerUserName" class="text-xs font-bold text-slate-700 tracking-tight group-hover:text-sky-600"></span>
+                <span id="headerUserStatus" class="flex items-center text-[10px] font-black uppercase tracking-widest text-emerald-600 px-2 py-0.5 bg-emerald-50 rounded-md border border-emerald-100/80 mt-0.5 green-glint">Logged In</span>
+            </div>
         </div>
 
         <header class="pt-12 pb-4 text-center relative">
@@ -246,6 +250,7 @@
 
         <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
             <div class="relative w-full flex items-center justify-between py-6">
+                
                 <button id="prevBtn" class="absolute left-2 md:left-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                 </button>
@@ -262,7 +267,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
@@ -276,7 +280,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
@@ -287,7 +290,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
@@ -298,7 +300,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
@@ -309,7 +310,6 @@
                             </div>
                             <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
@@ -320,7 +320,6 @@
                             </div>
                             <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">Launch</a>
                         </div>
-
                     </div>
                 </div>
 
@@ -362,9 +361,11 @@
         const usernameInput = document.getElementById('usernameInput');
         const saveNameBtn = document.getElementById('saveNameBtn');
         
+        const profileBadgeBtn = document.getElementById('profileBadgeBtn');
+        const setupProfileCTA = document.getElementById('setupProfileCTA');
+        const registeredProfile = document.getElementById('registeredProfile');
         const headerUserName = document.getElementById('headerUserName');
         const headerUserStatus = document.getElementById('headerUserStatus');
-        const profileBadgeBtn = document.getElementById('profileBadgeBtn');
         
         const accountModal = document.getElementById('accountModal');
         const accountModalBox = document.getElementById('accountModalBox');
@@ -408,11 +409,17 @@
         }
 
         function updateHeaderUI(fullName) {
-            if (fullName && headerUserName && headerUserStatus) {
+            if (fullName) {
+                setupProfileCTA.classList.add('hidden');
+                registeredProfile.classList.remove('hidden');
+                registeredProfile.classList.add('flex');
+                
                 headerUserName.innerText = fullName;
                 modalAccountName.innerText = fullName; 
-                headerUserStatus.classList.remove('hidden');
-                headerUserStatus.classList.add('inline-flex');
+            } else {
+                setupProfileCTA.classList.remove('hidden');
+                registeredProfile.classList.add('hidden');
+                registeredProfile.classList.remove('flex');
             }
         }
 
@@ -441,22 +448,18 @@
         function playWinkAndMinimize(savedName) {
             splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
             
-            // Instantly display splash to prevent flickering
             splashScreen.style.transitionDuration = '0s';
             showModal(splashScreen, null);
             
-            // Allow browser to register layout, then restore transitions
             requestAnimationFrame(() => {
                 splashScreen.style.transitionDuration = ''; 
                 splashContainer.classList.remove('scale-95', 'opacity-0');
             });
 
-            // After 2.2 seconds, mathematically vacuum into the top-right badge
             setTimeout(() => {
                 const badgeRect = profileBadgeBtn.getBoundingClientRect();
                 const splashRect = splashContainer.getBoundingClientRect();
                 
-                // High-precision coordinate math targeting the exact pixel center of both elements
                 const targetX = badgeRect.width ? (badgeRect.left + badgeRect.width / 2) - (splashRect.left + splashRect.width / 2) : (window.innerWidth / 2) - 60;
                 const targetY = badgeRect.height ? (badgeRect.top + badgeRect.height / 2) - (splashRect.top + splashRect.height / 2) : -(window.innerHeight / 2) + 40;
 
@@ -466,7 +469,6 @@
                 
                 hideModal(splashScreen, null);
                 
-                // Once transition finishes, queue the Testing Alert (if applicable)
                 setTimeout(() => {
                     if (!isStandaloneWindow && !isFastTrack) configureTestingAlert();
                 }, 600);
@@ -475,28 +477,39 @@
 
         // --- INSTANT BOOT SEQUENCE ---
         (function initApp() {
-            // Unhide workspace immediately
             mainWorkspace.classList.remove('opacity-0');
-
             const savedName = localStorage.getItem('medTools_user');
             const isInstalledFlag = localStorage.getItem('medTools_installed') === 'true';
 
-            // Phase 1: Fast-track overrides everything if not in PWA
+            // 1. SET UP THE TOP RIGHT HEADER BUTTON
+            updateHeaderUI(savedName);
+
+            // 2. CHECK FOR FAST TRACK INSTALL OVERRIDE
             if (isFastTrack && !isStandaloneWindow && !isInstalledFlag) {
                 configureInstallAlert();
                 return;
             }
 
-            // Phase 2: Route users
+            // 3. EXECUTE STANDARD APP LOGIN (if registered)
             if (savedName) {
-                updateHeaderUI(savedName);
                 playWinkAndMinimize(savedName);
-            } else {
-                showModal(nameModal, nameModalBox);
             }
+            // If !savedName, they stay in main workspace and the glowing "Complete Profile" button will attract their attention.
         })();
 
         // --- INTERACTIVE EVENT LISTENERS ---
+        
+        // When clicking the Profile Badge Area (either "Complete Profile" or "Logged In")
+        profileBadgeBtn.addEventListener('click', () => {
+            const savedName = localStorage.getItem('medTools_user');
+            if (!savedName) {
+                showModal(nameModal, nameModalBox);
+            } else {
+                showModal(accountModal, accountModalBox);
+            }
+        });
+
+        // When saving the name inside the Onboarding modal
         saveNameBtn.addEventListener('click', () => {
             const enteredName = usernameInput.value.trim();
             if (!enteredName) {
@@ -534,17 +547,10 @@
                     }
                 }
                 
-                // If they cancel installation
+                // If they cancel installation, dismiss the install modal
                 deferredPrompt = null;
                 hideModal(attentionModal, modalBox);
-                setTimeout(() => {
-                    const savedName = localStorage.getItem('medTools_user');
-                    if (!savedName) {
-                        showModal(nameModal, nameModalBox);
-                    } else {
-                        playWinkAndMinimize(savedName);
-                    }
-                }, 500);
+                // No need to show Onboarding manually! The glowing button is already there waiting for them.
                 return;
             }
 
@@ -552,11 +558,8 @@
             hideModal(attentionModal, modalBox);
         });
 
-        // Drawer Bindings
-        if (profileBadgeBtn) profileBadgeBtn.addEventListener('click', () => { showModal(accountModal, accountModalBox); });
         if (closeAccountModalBtn) closeAccountModalBtn.addEventListener('click', () => { hideModal(accountModal, accountModalBox); });
 
-        // Native PWA Prompt Check
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -572,7 +575,9 @@
                 if (!deferredPrompt) return;
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') localStorage.setItem('medTools_installed', 'true');
+                if (outcome === 'accepted') {
+                    localStorage.setItem('medTools_installed', 'true');
+                }
                 deferredPrompt = null;
                 manualInstallBtn.classList.remove('inline-flex');
                 manualInstallBtn.classList.add('hidden');
