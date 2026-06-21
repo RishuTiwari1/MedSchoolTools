@@ -1,26 +1,22 @@
 {
-  "name": "MedSchoolTools",
+  "name": "MedSchoolTools Suite",
   "short_name": "MedTools",
   "description": "Interactive Medical Education Suite by Rishu Tiwari",
   "start_url": "./index.html",
-  "scope": "./",
-  "display": "fullscreen",
-  "orientation": "portrait-primary",
+  "display": "standalone",
   "background_color": "#f8fafc",
-  "theme_color": "#0ea5e9",
-  "categories": ["education", "medical"],
+  "theme-color": "#0ea5e9",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "logo.png",
       "sizes": "1024x1024",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "logo.png",
-      "sizes": "1024x1024",
-      "type": "image/png",
-      "purpose": "maskable"
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
