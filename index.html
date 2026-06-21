@@ -166,7 +166,7 @@
                 </svg>
                 <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Welcome!</h2>
             </div>
-            <p class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let's Jump In!</p>
+            <p id="onboardingDescription" class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let's Jump In!</p>
             
             <div class="space-y-4">
                 <input type="text" id="usernameInput" placeholder="Enter Full Name" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all placeholder:text-slate-400">
@@ -240,9 +240,7 @@
             
             <div class="mt-4 flex justify-center">
                 <button id="manualInstallBtn" class="hidden items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md hover:shadow-sky-400/30 transition-all duration-200 cursor-pointer focus:outline-none active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
                     Install App
                 </button>
             </div>
@@ -290,7 +288,7 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
+                        <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-rose-200 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
@@ -338,7 +336,6 @@
     </div>
 
     <script>
-        // DOM Caching
         const track = document.getElementById('carouselTrack');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -377,7 +374,6 @@
         let currentIndex = 0;
         let deferredPrompt;
 
-        // Context Evaluation
         const urlParams = new URLSearchParams(window.location.search);
         const isFastTrack = urlParams.get('source') === 'fasttrack';
         const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -460,6 +456,7 @@
                 const badgeRect = profileBadgeBtn.getBoundingClientRect();
                 const splashRect = splashContainer.getBoundingClientRect();
                 
+                // Absolute mathematical delta routing directly up into your profile badge center coordinates
                 const targetX = badgeRect.width ? (badgeRect.left + badgeRect.width / 2) - (splashRect.left + splashRect.width / 2) : (window.innerWidth / 2) - 60;
                 const targetY = badgeRect.height ? (badgeRect.top + badgeRect.height / 2) - (splashRect.top + splashRect.height / 2) : -(window.innerHeight / 2) + 40;
 
@@ -475,31 +472,28 @@
             }, 2200);
         }
 
-        // --- INSTANT BOOT SEQUENCE ---
-        (function initApp() {
+        // --- CORE LOGIC PIPELINE ROUTER ---
+        document.addEventListener("DOMContentLoaded", () => {
             mainWorkspace.classList.remove('opacity-0');
             const savedName = localStorage.getItem('medTools_user');
             const isInstalledFlag = localStorage.getItem('medTools_installed') === 'true';
 
-            // 1. SET UP THE TOP RIGHT HEADER BUTTON
+            // 1. Map current user identity profile tag elements instantly
             updateHeaderUI(savedName);
 
-            // 2. CHECK FOR FAST TRACK INSTALL OVERRIDE
+            // 2. Handle Fast-track arrivals context
             if (isFastTrack && !isStandaloneWindow && !isInstalledFlag) {
                 configureInstallAlert();
                 return;
             }
 
-            // 3. EXECUTE STANDARD APP LOGIN (if registered)
+            // 3. Auto-launch Welcome Wink if returning verified doctor footprint session
             if (savedName) {
                 playWinkAndMinimize(savedName);
             }
-            // If !savedName, they stay in main workspace and the glowing "Complete Profile" button will attract their attention.
-        })();
+        });
 
-        // --- INTERACTIVE EVENT LISTENERS ---
-        
-        // When clicking the Profile Badge Area (either "Complete Profile" or "Logged In")
+        // --- INTERACTIVE EVENT BINDINGS ---
         profileBadgeBtn.addEventListener('click', () => {
             const savedName = localStorage.getItem('medTools_user');
             if (!savedName) {
@@ -509,7 +503,6 @@
             }
         });
 
-        // When saving the name inside the Onboarding modal
         saveNameBtn.addEventListener('click', () => {
             const enteredName = usernameInput.value.trim();
             if (!enteredName) {
@@ -522,7 +515,6 @@
             
             hideModal(nameModal, nameModalBox);
             
-            // Wait for modal exit transition, then trigger wink
             setTimeout(() => {
                 playWinkAndMinimize(enteredName);
             }, 400); 
@@ -546,15 +538,10 @@
                         return; 
                     }
                 }
-                
-                // If they cancel installation, dismiss the install modal
                 deferredPrompt = null;
                 hideModal(attentionModal, modalBox);
-                // No need to show Onboarding manually! The glowing button is already there waiting for them.
                 return;
             }
-
-            // Normal Testing Alert Dismiss
             hideModal(attentionModal, modalBox);
         });
 
@@ -575,9 +562,7 @@
                 if (!deferredPrompt) return;
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    localStorage.setItem('medTools_installed', 'true');
-                }
+                if (outcome === 'accepted') localStorage.setItem('medTools_installed', 'true');
                 deferredPrompt = null;
                 manualInstallBtn.classList.remove('inline-flex');
                 manualInstallBtn.classList.add('hidden');
