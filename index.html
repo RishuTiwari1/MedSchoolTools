@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedSchoolTools</title>
     
-    <!-- PWA Manifest Configuration Links -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0ea5e9">
     
-    <!-- Forces iOS standalone web shells into full screen immersion mode -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="MedTools">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Tailwind CSS for clean, rapid design styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         /* Modern, ultra-smooth gaming dashboard physics */
@@ -96,6 +93,14 @@
             0% { transform: translateX(-150%) rotate(45deg); }
             100% { transform: translateX(150%) rotate(45deg); }
         }
+        .glint-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 200%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
+            transform: translateX(-150%) rotate(45deg);
+            animation: glint 2s infinite ease-in-out;
+        }
         .green-glint {
             position: relative;
             overflow: hidden;
@@ -119,43 +124,31 @@
             45%, 55% { opacity: 1; }
         }
 
-        .splash-eye-open {
-            animation: welcomeWinkOpenCircle 1.8s infinite ease-in-out;
-        }
-        .splash-eye-closed {
-            animation: welcomeWinkClosedLine 1.8s infinite ease-in-out;
-        }
+        .splash-eye-open { animation: welcomeWinkOpenCircle 1.8s infinite ease-in-out; }
+        .splash-eye-closed { animation: welcomeWinkClosedLine 1.8s infinite ease-in-out; }
 
-        /* Responsive scaling tweaks for smaller viewpoints */
         @media (max-width: 640px) {
             .carousel-card.left-1 { transform: translateX(-120px) scale(0.75) rotateY(30deg); }
             .carousel-card.right-1 { transform: translateX(120px) scale(0.75) rotateY(-30deg); }
         }
     </style>
     
-    <!-- Service Worker Background Thread Initialization Script -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('PWA Service Worker registered successfully!'))
                     .catch(err => console.log('Service Worker registration failed: ', err));
             });
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100 transition-opacity duration-300">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100 transition-opacity duration-300 opacity-0" id="appBody">
 
-    <!-- Welcome Wink Flat Splash Screen Modal Layout -->
     <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 invisible pointer-events-none">
         <div class="flex flex-col items-center gap-4 text-center transform translate-y-4 opacity-0 transition-all duration-700" id="splashContainer">
-            <!-- Grand Enlarged Flat Splash Smiley Shared by Onboarding/Logins -->
             <svg class="w-28 h-28 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 14s2 3 6 3 6-3 6-3" stroke-linecap="round"/>
-                <!-- Left Eye -->
                 <circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/>
-                
-                <!-- Right Eye Stacked Geometry for Pure Flat Line In-Place Winking -->
                 <circle id="splashCircleEye" class="splash-eye-open" cx="16" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                 <line id="splashLineEye" class="splash-eye-closed" x1="14.6" y1="9" x2="17.4" y2="9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
             </svg>
@@ -163,7 +156,6 @@
         </div>
     </div>
 
-    <!-- Onboarding Step: Collect User Name Modal Configuration -->
     <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
         <div id="nameModalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-all duration-500 text-center">
             <div class="flex flex-col items-center gap-3 mb-2">
@@ -185,9 +177,8 @@
         </div>
     </div>
 
-    <!-- PWA Beta Testing Attention Overlay Modal -->
     <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
-        <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-95">
+        <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-95 transition-all duration-300">
             <div id="modalIconContainer" class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative">
                 <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 relative">
@@ -207,12 +198,11 @@
         </div>
     </div>
 
-    <!-- Interactive Profile Account Drawer Modal Layout -->
     <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none">
         <div id="accountModalBox" class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-all">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900">User Profile</h3>
-                <button id="closeAccountModalBtn" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-50">
+                <button id="closeAccountModalBtn" class="text-slate-400 hover:text-slate-600 cursor-pointer p-1 rounded-lg hover:bg-slate-50 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -234,23 +224,19 @@
         </div>
     </div>
 
-    <!-- Main Workspace Page Container -->
-    <div id="mainWorkspace" class="transition-opacity duration-500 flex flex-col justify-between min-h-screen w-full relative">
+    <div id="mainWorkspace" class="transition-opacity duration-500 flex flex-col justify-between min-h-screen w-full relative opacity-0">
         
-        <!-- Profile Identity Badge (Top Right Absolute Interactive Layout) -->
         <div id="profileBadgeBtn" class="absolute top-4 right-4 md:right-10 z-20 flex flex-col items-end text-right min-h-[40px] cursor-pointer hover:bg-slate-200/50 p-1.5 rounded-xl border border-transparent hover:border-slate-200/40 transition-all group">
             <span id="headerUserName" class="text-xs font-bold text-slate-700 tracking-tight group-hover:text-sky-600"></span>
             <span id="headerUserStatus" class="hidden items-center text-[10px] font-black uppercase tracking-widest text-emerald-600 px-2 py-0.5 bg-emerald-50 rounded-md border border-emerald-100/80 mt-0.5 green-glint">Logged In</span>
         </div>
 
-        <!-- Top Header Layout -->
         <header class="pt-12 pb-4 text-center relative">
             <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent inline-block">
                 MedSchoolTools
             </h1>
             <p class="text-xs text-slate-400 mt-2 font-bold tracking-widest uppercase px-4">INTERACTIVE MEDICAL EDUCATION SUITE BY RISHU TIWARI</p>
             
-            <!-- Manual PWA Installation Trigger Button -->
             <div class="mt-4 flex justify-center">
                 <button id="manualInstallBtn" class="hidden items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md hover:shadow-sky-400/30 transition-all duration-200 cursor-pointer focus:outline-none active:scale-95">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
@@ -261,29 +247,19 @@
             </div>
         </header>
 
-        <!-- Interactive Carousel Showcase Section -->
         <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
-            
             <div class="relative w-full flex items-center justify-between py-6">
                 
-                <!-- Left Arrow Button -->
                 <button id="prevBtn" class="absolute left-2 md:left-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                 </button>
 
-                <!-- Main Aurora Tracking Frame -->
                 <div class="carousel-container w-full overflow-hidden py-10">
                     <div id="carouselTrack" class="carousel-track">
-                        
-                        <!-- CARD 1: Darrow Yannet Simulator -->
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 mb-4 border border-sky-100/70">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" /></svg>
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-800 tracking-tight">Darrow Yannet Simulator</h3>
                                 <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Simulate and practice how shifting fluid and electrolyte balance impacts clinical fluid compartments.</p>
@@ -291,7 +267,6 @@
                             <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
 
-                        <!-- CARD 2: Neural Gaze Lesion Simulator -->
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
@@ -306,13 +281,10 @@
                             <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
 
-                        <!-- CARD 3: ImmuneCheck Breakers! -->
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286z" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286z" /></svg>
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-800 tracking-tight">ImmuneCheck Breakers!</h3>
                                 <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Master pharmacology inhibitors by dissecting monoclonal antibody targeting blocks in immunology pathways.</p>
@@ -320,13 +292,10 @@
                             <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
 
-                        <!-- CARD 4: Sarcomere Simulator -->
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-800 tracking-tight">Sarcomere Simulator</h3>
                                 <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Interact directly with actin and myosin filament cross-bridge binding sequences during muscle contraction.</p>
@@ -334,13 +303,10 @@
                             <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
 
-                        <!-- CARD 5: Blood Flow Simulator -->
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.75 12h14.5M12 4.75v14.5" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M4.75 12h14.5M12 4.75v14.5" /></svg>
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-800 tracking-tight">Blood Flow Simulator</h3>
                                 <p class="text-sm text-slate-500 mt-2.5 leading-relaxed line-clamp-3">Analyze resistance, vessel radius adjustments, and pressure gradients with real-time hemodynamic formulas.</p>
@@ -348,13 +314,10 @@
                             <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
 
-                        <!-- CARD 6: Blank Placeholder Template -->
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-400 tracking-tight">In Development</h3>
                                 <p class="text-sm text-slate-400 mt-2.5 leading-relaxed line-clamp-3"></p>
@@ -365,20 +328,13 @@
                     </div>
                 </div>
 
-                <!-- Right Arrow Button -->
                 <button id="nextBtn" class="absolute right-2 md:right-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                 </button>
-
             </div>
-
-            <!-- Custom Active State Tracking Dots -->
             <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
         </main>
 
-        <!-- Modern Styled Professional Footer Notification -->
         <footer class="py-8 text-center border-t border-slate-200 bg-white/60 backdrop-blur-md">
             <p class="text-[11px] tracking-widest text-slate-400 font-bold uppercase">
                 &copy; 2026 MedSchoolTools. All Rights Reserved by <span class="text-slate-700 font-extrabold transition-colors hover:text-sky-600">Rishu Tiwari</span>.
@@ -386,14 +342,13 @@
         </footer>
     </div>
 
-    <!-- Operational Controllers Logic -->
     <script>
+        // High-Efficiency DOM Caching
         const track = document.getElementById('carouselTrack');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const dotsContainer = document.getElementById('paginationDots');
         
-        // Modal Selectors
         const attentionModal = document.getElementById('attentionModal');
         const modalBox = document.getElementById('modalBox');
         const modalIconContainer = document.getElementById('modalIconContainer');
@@ -419,21 +374,44 @@
         const accountModalBox = document.getElementById('accountModalBox');
         const closeAccountModalBtn = document.getElementById('closeAccountModalBtn');
         const modalAccountName = document.getElementById('modalAccountName');
+        const mainWorkspace = document.getElementById('mainWorkspace');
 
         let cards = Array.from(track.children);
         let currentIndex = 0;
         let deferredPrompt;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const isFastTrack = urlParams.get('source') === 'fasttrack';
-        
-        // Standalone Mode Detection Checkpoints
-        const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        const isInstalled = localStorage.getItem('medTools_installed') === 'true';
+        // --- APP ENGINE INITIALIZATION ---
+        (function initApp() {
+            try {
+                // Instantly strip opacity blocks to prevent the white screen bug
+                document.getElementById('appBody').classList.remove('opacity-0');
+                mainWorkspace.classList.remove('opacity-0');
 
+                // Evaluate parameters
+                const savedName = localStorage.getItem('medTools_user');
+                const isFastTrack = new URLSearchParams(window.location.search).get('source') === 'fasttrack';
+                const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                const isInstalled = localStorage.getItem('medTools_installed') === 'true';
+
+                // Routing State Machine
+                if (isFastTrack && !isPWA && !isInstalled) {
+                    showInstallPrompt();
+                } else if (savedName) {
+                    updateHeaderUI(savedName);
+                    triggerWinkTransition(savedName, isPWA, isFastTrack);
+                } else {
+                    showOnboarding();
+                }
+            } catch (error) {
+                console.error("Initialization Failed:", error);
+                document.getElementById('appBody').classList.remove('opacity-0');
+                mainWorkspace.classList.remove('opacity-0');
+            }
+        })();
+
+        // --- CORE UI FUNCTIONS ---
         function getFirstName(fullName) {
-            if (!fullName) return "Friend";
-            return fullName.trim().split(' ')[0];
+            return fullName ? fullName.trim().split(' ')[0] : "Friend";
         }
 
         function updateHeaderUI(fullName) {
@@ -445,41 +423,30 @@
             }
         }
 
-        function triggerWinkTransition(savedName) {
-            splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
-            splashScreen.style.display = 'flex';
+        function showInstallPrompt() {
+            modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-600 mb-4 border border-sky-100 relative shadow-inner";
+            modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
             
-            setTimeout(() => {
-                splashScreen.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
-                splashScreen.classList.add('opacity-100');
-            }, 10);
+            modalTitle.innerText = "Install Application";
+            modalTitle.className = "text-xl font-bold text-slate-900 tracking-tight mb-2";
+            modalText.innerHTML = `
+                Install MedSchoolTools to your home screen for quick access and full-screen mode.<br>
+                <span class="text-slate-500 text-xs mt-2 block font-medium">No app store required. Free to use.</span>
+            `;
             
-            setTimeout(() => {
-                splashContainer.classList.remove('translate-y-4', 'opacity-0');
-            }, 50);
+            modalButton.innerText = "Install Application";
+            modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/40 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none";
+            modalButton.style.display = 'block';
 
-            setTimeout(() => {
-                const targetX = window.innerWidth / 2 - 120;
-                const targetY = -(window.innerHeight / 2 - 50);
-
-                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
-                splashContainer.style.opacity = '0';
-                splashScreen.classList.replace('opacity-100', 'opacity-0');
-                
-                setTimeout(() => {
-                    splashScreen.classList.add('invisible', 'pointer-events-none');
-                    splashScreen.style.display = 'none';
-                }, 600);
-            }, 2200);
+            attentionModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+            attentionModal.classList.add('opacity-100');
+            setTimeout(() => modalBox.classList.remove('scale-95'), 50);
         }
 
         function showOnboarding() {
-            nameModal.style.display = 'flex';
-            setTimeout(() => {
-                nameModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
-                nameModal.classList.add('opacity-100');
-                setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);
-            }, 100);
+            nameModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+            nameModal.classList.add('opacity-100');
+            setTimeout(() => nameModalBox.classList.remove('scale-95'), 50);
         }
 
         function showTestingAlert() {
@@ -492,68 +459,46 @@
                 The App is Currently In Testing Phase, Open to All.<br>
                 <span class="text-emerald-600 font-bold">No Payments Required.</span>
             `;
+            
             modalButton.innerText = "Acknowledge & Enter";
             modalButton.className = "w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none";
             modalButton.style.display = 'block';
 
-            attentionModal.style.display = 'flex';
+            attentionModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+            attentionModal.classList.add('opacity-100');
+            setTimeout(() => modalBox.classList.remove('scale-95'), 50);
+        }
+
+        function triggerWinkTransition(savedName, isPWA, isFastTrack) {
+            splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
+            
+            // Strictly enforce visibility classes
+            splashScreen.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+            splashScreen.classList.add('opacity-100');
+            
             setTimeout(() => {
-                attentionModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
-                attentionModal.classList.add('opacity-100');
-                setTimeout(() => modalBox.classList.remove('scale-95'), 50);
-            }, 10);
-        }
+                splashContainer.classList.remove('translate-y-4', 'opacity-0');
+            }, 50);
 
-        // --- MASTER BOOT SEQUENCE ---
-        function initApp() {
-            document.body.classList.remove('opacity-0');
-            const mainWorkspace = document.getElementById('mainWorkspace');
-            mainWorkspace.classList.remove('opacity-0');
+            setTimeout(() => {
+                const targetX = window.innerWidth / 2 - 120;
+                const targetY = -(window.innerHeight / 2 - 50);
 
-            const savedName = localStorage.getItem('medTools_user');
-
-            // 1. FAST-TRACK INSTALL PROMPT (Strictly browser tabs context only)
-            if (isFastTrack && !isStandaloneWindow && !isInstalled) {
-                nameModal.classList.add('invisible', 'pointer-events-none');
-                nameModal.style.display = 'none';
-
-                modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-600 mb-4 border border-sky-100 relative shadow-inner";
-                modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
+                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
+                splashContainer.style.opacity = '0';
                 
-                modalTitle.innerText = "Install Application";
-                modalTitle.className = "text-xl font-bold text-slate-900 tracking-tight mb-2";
-                modalText.innerHTML = `
-                    Install MedSchoolTools to your home screen for quick access and full-screen mode.<br>
-                    <span class="text-slate-500 text-xs mt-2 block font-medium">No app store required. Free to use.</span>
-                `;
+                splashScreen.classList.remove('opacity-100');
+                splashScreen.classList.add('opacity-0');
                 
-                modalButton.innerText = "Install Application";
-                modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/40 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1";
-                modalButton.style.display = 'block';
-
-                attentionModal.style.display = 'flex';
                 setTimeout(() => {
-                    attentionModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
-                    attentionModal.classList.add('opacity-100');
-                    setTimeout(() => modalBox.classList.remove('scale-95'), 50);
-                }, 10);
-                return;
-            }
-
-            // 2. STANDARD BOOT SEQUENCE (Shared natively across both layouts)
-            if (savedName) {
-                updateHeaderUI(savedName);
-                triggerWinkTransition(savedName);
-                
-                if (!isStandaloneWindow) {
-                    setTimeout(() => showTestingAlert(), 2800);
-                }
-            } else {
-                showOnboarding();
-            }
+                    splashScreen.classList.add('invisible', 'pointer-events-none');
+                    // Check if testing alert is needed
+                    if (!isPWA && !isFastTrack) {
+                        showTestingAlert();
+                    }
+                }, 600);
+            }, 2200);
         }
-
-        initApp();
 
         // --- EVENT LISTENERS ---
         saveNameBtn.addEventListener('click', () => {
@@ -567,22 +512,21 @@
             updateHeaderUI(enteredName);
 
             nameModalBox.classList.add('scale-95');
-            nameModal.classList.replace('opacity-100', 'opacity-0');
+            nameModal.classList.remove('opacity-100');
+            nameModal.classList.add('opacity-0');
             
             setTimeout(() => {
                 nameModal.classList.add('invisible', 'pointer-events-none');
-                nameModal.style.display = 'none';
                 
-                triggerWinkTransition(enteredName);
+                const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                const isFastTrack = new URLSearchParams(window.location.search).get('source') === 'fasttrack';
                 
-                if (!isStandaloneWindow && !isFastTrack) {
-                    setTimeout(() => showTestingAlert(), 2800);
-                }
+                triggerWinkTransition(enteredName, isPWA, isFastTrack);
             }, 400);
         });
 
         modalButton.addEventListener('click', async () => {
-            const isInstallMode = (isFastTrack && !isStandaloneWindow && !isInstalled && modalTitle.innerText === "Install Application");
+            const isInstallMode = modalTitle.innerText === "Install Application";
 
             if (isInstallMode) {
                 if (deferredPrompt) {
@@ -595,61 +539,57 @@
                         
                         modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-600 mb-4 border border-slate-200 relative";
                         modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8 animate-spin"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>`;
-                        
                         modalTitle.innerText = "Installing...";
-                        modalText.innerHTML = `
-                            Please check your home screen for the MedTools app.<br>
-                            <span class="text-slate-500 text-xs mt-3 block font-semibold">You may now close this browser window.</span>
-                        `;
+                        modalText.innerHTML = `Please check your home screen for the MedTools app.<br><span class="text-slate-500 text-xs mt-3 block font-semibold">You may now close this browser window.</span>`;
                         modalButton.style.display = 'none';
                         return; 
                     }
                 }
                 
+                // Skipped Install - Clean up and proceed
                 deferredPrompt = null;
                 modalBox.classList.add('scale-95');
-                attentionModal.classList.replace('opacity-100', 'opacity-0');
+                attentionModal.classList.remove('opacity-100');
+                attentionModal.classList.add('opacity-0');
                 
                 setTimeout(() => {
                     attentionModal.classList.add('invisible', 'pointer-events-none');
-                    attentionModal.style.display = 'none';
                     
                     if (!localStorage.getItem('medTools_user')) {
                         showOnboarding();
                     } else {
-                        triggerWinkTransition(localStorage.getItem('medTools_user'));
+                        const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                        triggerWinkTransition(localStorage.getItem('medTools_user'), isPWA, false);
                     }
                 }, 400);
                 return;
             }
 
+            // Normal Testing Dismissal
             modalBox.classList.add('scale-95');
-            attentionModal.classList.replace('opacity-100', 'opacity-0');
+            attentionModal.classList.remove('opacity-100');
+            attentionModal.classList.add('opacity-0');
             setTimeout(() => {
                 attentionModal.classList.add('invisible', 'pointer-events-none');
-                attentionModal.style.display = 'none';
             }, 400);
         });
 
         // Drawer Controls
         if (profileBadgeBtn) {
             profileBadgeBtn.addEventListener('click', () => {
-                accountModal.style.display = 'flex';
-                setTimeout(() => {
-                    accountModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
-                    accountModal.classList.add('opacity-100');
-                    setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);
-                }, 10);
+                accountModal.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+                accountModal.classList.add('opacity-100');
+                setTimeout(() => accountModalBox.classList.remove('scale-95'), 10);
             });
         }
 
         if (closeAccountModalBtn) {
             closeAccountModalBtn.addEventListener('click', () => {
                 accountModalBox.classList.add('scale-95');
-                accountModal.classList.replace('opacity-100', 'opacity-0');
+                accountModal.classList.remove('opacity-100');
+                accountModal.classList.add('opacity-0');
                 setTimeout(() => {
                     accountModal.classList.add('invisible', 'pointer-events-none');
-                    accountModal.style.display = 'none';
                 }, 400);
             });
         }
@@ -657,7 +597,8 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            if (isStandaloneWindow) return;
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isPWA) return;
             if (manualInstallBtn) {
                 manualInstallBtn.classList.remove('hidden');
                 manualInstallBtn.classList.add('inline-flex');
