@@ -70,6 +70,24 @@
             z-index: 20;
         }
 
+        /* Modal specific exit animation overrides */
+        #attentionModal, #nameModal, #accountModal {
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.4s;
+        }
+        #modalBox, #nameModalBox, #accountModalBox {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Welcome Wink Advanced Fluid Splash Infrastructure */
+        #splashScreen {
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+        }
+        #splashContainer {
+            transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.1, 1), 
+                        opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: center;
+        }
+
         /* Glint Shimmer Keyframe Animations */
         @keyframes glint {
             0% { transform: translateX(-150%) rotate(45deg); }
@@ -126,19 +144,19 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100">
 
-    <div id="splashScreen" class="hidden fixed inset-0 z-50 items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 transition-opacity duration-500">
-        <div class="flex flex-col items-center gap-4 text-center transform scale-95 opacity-0 transition-all duration-700 origin-center" id="splashContainer">
+    <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 invisible pointer-events-none">
+        <div class="flex flex-col items-center gap-4 text-center transform scale-95 opacity-0 transition-all duration-700" id="splashContainer">
             <svg class="w-28 h-28 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 14s2 3 6 3 6-3 6-3" stroke-linecap="round"/>
                 <circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                 <circle id="splashCircleEye" class="splash-eye-open" cx="16" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                 <line id="splashLineEye" class="splash-eye-closed" x1="14.6" y1="9" x2="17.4" y2="9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
             </svg>
-            <h2 id="splashGreeting" class="text-2xl font-bold tracking-tight text-slate-800">Welcome Back Dr. Friend!</h2>
+            <h2 id="splashGreeting" class="text-2xl font-bold tracking-tight text-slate-800">Loading...</h2>
         </div>
     </div>
 
-    <div id="nameModal" class="hidden fixed inset-0 z-40 items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 transition-opacity duration-500">
+    <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
         <div id="nameModalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-transform duration-500 text-center">
             <div class="flex flex-col items-center gap-3 mb-2">
                 <svg class="w-16 h-16 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -159,19 +177,25 @@
         </div>
     </div>
 
-    <div id="attentionModal" class="hidden fixed inset-0 z-30 items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 transition-opacity duration-500">
+    <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
         <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-95 transition-transform duration-500">
             <div id="modalIconContainer" class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative">
-                </div>
+                <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 relative">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v17.792M14.25 3.104v17.792M4.75 12h14.5" />
+                </svg>
+            </div>
+            
             <h2 id="modalTitle" class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">Notice</h2>
             <p id="modalText" class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">Please review the details below.</p>
+            
             <button id="closeModalBtn" class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none">
                 Acknowledge
             </button>
         </div>
     </div>
 
-    <div id="accountModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 transition-opacity duration-500">
+    <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none">
         <div id="accountModalBox" class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-transform duration-500">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900">User Profile</h3>
@@ -221,9 +245,7 @@
         </header>
 
         <main class="flex-grow flex flex-col justify-center items-center px-4 max-w-6xl mx-auto w-full relative">
-            
             <div class="relative w-full flex items-center justify-between py-6">
-                
                 <button id="prevBtn" class="absolute left-2 md:left-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                 </button>
@@ -240,7 +262,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
@@ -254,7 +275,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
@@ -265,7 +285,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
@@ -276,7 +295,6 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
@@ -287,7 +305,6 @@
                             </div>
                             <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
-
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
@@ -298,16 +315,13 @@
                             </div>
                             <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">Launch</a>
                         </div>
-
                     </div>
                 </div>
 
                 <button id="nextBtn" class="absolute right-2 md:right-10 z-20 bg-white text-sky-600 hover:text-white p-4 rounded-full border border-slate-200 shadow-md hover:shadow-sky-300/60 hover:bg-sky-600 transition-all duration-300 active:scale-90 cursor-pointer focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                 </button>
-
             </div>
-
             <div id="paginationDots" class="flex space-x-2.5 mt-4"></div>
         </main>
 
@@ -363,15 +377,12 @@
 
         // --- RELIABLE MODAL TOGGLERS ---
         function showModal(modalNode, boxNode) {
-            modalNode.classList.remove('hidden');
-            requestAnimationFrame(() => {
-                modalNode.classList.remove('opacity-0');
-                modalNode.classList.add('opacity-100');
-                if(boxNode) {
-                    boxNode.classList.remove('scale-95');
-                    boxNode.classList.add('scale-100');
-                }
-            });
+            modalNode.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+            modalNode.classList.add('opacity-100');
+            if(boxNode) {
+                boxNode.classList.remove('scale-95');
+                boxNode.classList.add('scale-100');
+            }
         }
 
         function hideModal(modalNode, boxNode) {
@@ -382,7 +393,7 @@
             modalNode.classList.remove('opacity-100');
             modalNode.classList.add('opacity-0');
             setTimeout(() => {
-                modalNode.classList.add('hidden');
+                modalNode.classList.add('invisible', 'pointer-events-none');
             }, 500);
         }
 
@@ -403,6 +414,10 @@
         function playWinkAndMinimize(savedName) {
             splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
             showModal(splashScreen, null);
+            
+            setTimeout(() => {
+                splashContainer.classList.remove('scale-95', 'opacity-0');
+            }, 50);
 
             // Give the wink 2 seconds to loop beautifully
             setTimeout(() => {
@@ -410,19 +425,17 @@
                 const badgeRect = profileBadgeBtn.getBoundingClientRect();
                 const splashRect = splashContainer.getBoundingClientRect();
                 
-                const targetX = (badgeRect.left + badgeRect.width / 2) - (splashRect.left + splashRect.width / 2);
-                const targetY = (badgeRect.top + badgeRect.height / 2) - (splashRect.top + splashRect.height / 2);
+                // Fallback coordinates if getBoundingClientRect fails on mobile
+                const targetX = badgeRect.width ? (badgeRect.left + badgeRect.width / 2) - (splashRect.left + splashRect.width / 2) : (window.innerWidth / 2) - 60;
+                const targetY = badgeRect.height ? (badgeRect.top + badgeRect.height / 2) - (splashRect.top + splashRect.height / 2) : -(window.innerHeight / 2) + 40;
 
                 splashContainer.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease';
                 splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
                 splashContainer.style.opacity = '0';
                 
-                splashScreen.classList.remove('opacity-100');
-                splashScreen.classList.add('opacity-0');
+                hideModal(splashScreen, null);
                 
                 setTimeout(() => {
-                    splashScreen.classList.add('hidden');
-                    
                     // Show testing alert only if NOT installed
                     if (!isStandaloneWindow && !isFastTrack) configureTestingAlert();
                 }, 600);
@@ -453,8 +466,8 @@
             showModal(attentionModal, modalBox);
         }
 
-        // --- MASTER INSTANT BOOT SEQUENCE ---
-        (function initApp() {
+        // --- MASTER BOOT SEQUENCE ---
+        document.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('medTools_user');
             const isInstalledFlag = localStorage.getItem('medTools_installed') === 'true';
 
@@ -471,7 +484,7 @@
             } else {
                 showModal(nameModal, nameModalBox);
             }
-        })();
+        });
 
         // --- INTERACTIVE EVENT LISTENERS ---
         saveNameBtn.addEventListener('click', () => {
