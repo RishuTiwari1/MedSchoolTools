@@ -80,7 +80,7 @@
 
         /* Welcome Wink Advanced Fluid Splash Infrastructure */
         #splashScreen {
-            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
         #splashContainer {
             transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.1, 1), 
@@ -142,9 +142,9 @@
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-100" id="appBody">
 
-    <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 invisible pointer-events-none">
+    <div id="splashScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-50/95 backdrop-blur-2xl opacity-0 invisible pointer-events-none transition-opacity duration-500">
         <div class="flex flex-col items-center gap-4 text-center transform scale-95 opacity-0 transition-all duration-700" id="splashContainer">
             <svg class="w-28 h-28 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 14s2 3 6 3 6-3 6-3" stroke-linecap="round"/>
@@ -156,7 +156,7 @@
         </div>
     </div>
 
-    <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
+    <div id="nameModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none transition-opacity duration-500">
         <div id="nameModalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-transform duration-500 text-center">
             <div class="flex flex-col items-center gap-3 mb-2">
                 <svg class="w-16 h-16 text-sky-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -164,11 +164,11 @@
                     <circle cx="8" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                     <circle cx="16" cy="9" r="1.2" fill="currentColor" stroke="none"/>
                 </svg>
-                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Welcome!</h2>
+                <h2 id="onboardingTitle" class="text-xl font-extrabold text-slate-900 tracking-tight">Welcome!</h2>
             </div>
-            <p class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let's Jump In!</p>
+            <p id="onboardingDescription" class="text-slate-500 text-sm mb-5 font-medium leading-relaxed">Enter Your Name and Let's Jump In!</p>
             
-            <div class="space-y-4">
+            <div id="onboardingForm" class="space-y-4">
                 <input type="text" id="usernameInput" placeholder="Enter Full Name" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all placeholder:text-slate-400">
                 <button id="saveNameBtn" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl shadow-sm transition-all text-sm tracking-wide cursor-pointer active:scale-95">
                     Enter
@@ -177,7 +177,7 @@
         </div>
     </div>
 
-    <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none">
+    <div id="attentionModal" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md opacity-0 invisible pointer-events-none transition-opacity duration-500">
         <div id="modalBox" class="w-full max-w-md bg-white rounded-2xl border border-slate-200/80 p-6 text-center shadow-2xl scale-95 transition-transform duration-500">
             <div id="modalIconContainer" class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 text-amber-500 mb-4 border border-amber-100 relative">
                 <span class="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-20 animate-ping"></span>
@@ -195,7 +195,7 @@
         </div>
     </div>
 
-    <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none">
+    <div id="accountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm opacity-0 invisible pointer-events-none transition-opacity duration-500">
         <div id="accountModalBox" class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl scale-95 transition-transform duration-500">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-900">User Profile</h3>
@@ -221,7 +221,7 @@
         </div>
     </div>
 
-    <div id="mainWorkspace" class="flex flex-col justify-between min-h-screen w-full relative">
+    <div id="mainWorkspace" class="flex flex-col justify-between min-h-screen w-full relative transition-opacity duration-500 opacity-0">
         
         <div id="profileBadgeBtn" class="absolute top-4 right-4 md:right-10 z-20 flex flex-col items-end text-right min-h-[40px] cursor-pointer hover:bg-slate-200/50 p-1.5 rounded-xl border border-transparent hover:border-slate-200/40 transition-all group">
             <span id="headerUserName" class="text-xs font-bold text-slate-700 tracking-tight group-hover:text-sky-600"></span>
@@ -262,6 +262,7 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/BodyVolumes-/" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
+
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-4 border border-indigo-100/70">
@@ -275,6 +276,7 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/Neurogazes/" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
+
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-4 border border-emerald-100/70">
@@ -285,6 +287,7 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/ImmuneBreakers/" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
+
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 mb-4 border border-rose-100/70">
@@ -295,6 +298,7 @@
                             </div>
                             <a href="https://rishutiwari1.github.io/MuscleActin/" class="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
+
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-slate-200/80 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100/70">
@@ -305,6 +309,7 @@
                             </div>
                             <a href="Bloodflow.html" class="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-xl text-center shadow-sm transition-colors text-sm tracking-wide">Launch</a>
                         </div>
+
                         <div class="carousel-card w-72 sm:w-80 bg-white rounded-2xl border border-dashed border-slate-300 p-6 flex flex-col justify-between h-80 shadow-sm transition-shadow duration-300">
                             <div class="flex flex-col items-center text-center">
                                 <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 mb-4 border border-slate-200/50">
@@ -315,6 +320,7 @@
                             </div>
                             <a href="#PLACEHOLDER_LINK_6" class="w-full py-2.5 px-4 bg-slate-300 text-white font-semibold rounded-xl text-center pointer-events-none text-sm tracking-wide">Launch</a>
                         </div>
+
                     </div>
                 </div>
 
@@ -333,13 +339,12 @@
     </div>
 
     <script>
-        // Core Controller Selectors
+        // DOM Caching
         const track = document.getElementById('carouselTrack');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const dotsContainer = document.getElementById('paginationDots');
         
-        // Modal Infrastructure Selectors
         const attentionModal = document.getElementById('attentionModal');
         const modalBox = document.getElementById('modalBox');
         const modalIconContainer = document.getElementById('modalIconContainer');
@@ -365,12 +370,13 @@
         const accountModalBox = document.getElementById('accountModalBox');
         const closeAccountModalBtn = document.getElementById('closeAccountModalBtn');
         const modalAccountName = document.getElementById('modalAccountName');
+        const mainWorkspace = document.getElementById('mainWorkspace');
 
         let cards = Array.from(track.children);
         let currentIndex = 0;
         let deferredPrompt;
 
-        // Display Context Evaluators
+        // Context Evaluation
         const urlParams = new URLSearchParams(window.location.search);
         const isFastTrack = urlParams.get('source') === 'fasttrack';
         const isStandaloneWindow = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -410,36 +416,15 @@
             }
         }
 
-        // --- HIGH PRECISION ANIMATION LOGIC ---
-        function playWinkAndMinimize(savedName) {
-            splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
-            showModal(splashScreen, null);
-            
-            setTimeout(() => {
-                splashContainer.classList.remove('scale-95', 'opacity-0');
-            }, 50);
-
-            // Give the wink 2 seconds to loop beautifully
-            setTimeout(() => {
-                // Precise math directly to the profile badge center
-                const badgeRect = profileBadgeBtn.getBoundingClientRect();
-                const splashRect = splashContainer.getBoundingClientRect();
-                
-                // Fallback coordinates if getBoundingClientRect fails on mobile
-                const targetX = badgeRect.width ? (badgeRect.left + badgeRect.width / 2) - (splashRect.left + splashRect.width / 2) : (window.innerWidth / 2) - 60;
-                const targetY = badgeRect.height ? (badgeRect.top + badgeRect.height / 2) - (splashRect.top + splashRect.height / 2) : -(window.innerHeight / 2) + 40;
-
-                splashContainer.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease';
-                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
-                splashContainer.style.opacity = '0';
-                
-                hideModal(splashScreen, null);
-                
-                setTimeout(() => {
-                    // Show testing alert only if NOT installed
-                    if (!isStandaloneWindow && !isFastTrack) configureTestingAlert();
-                }, 600);
-            }, 2200);
+        function configureInstallAlert() {
+            modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-600 mb-4 border border-sky-100 relative shadow-inner";
+            modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
+            modalTitle.innerText = "Install Application";
+            modalText.innerHTML = `Install MedSchoolTools to your home screen for quick access and full-screen mode.<br><span class="text-slate-500 text-xs mt-2 block font-medium">No app store required. Free to use.</span>`;
+            modalButton.innerText = "Install Application";
+            modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/40 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none";
+            modalButton.style.display = 'block';
+            showModal(attentionModal, modalBox);
         }
 
         function configureTestingAlert() {
@@ -450,41 +435,66 @@
             modalButton.innerText = "Acknowledge & Enter";
             modalButton.className = "w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-center shadow-sm transition-all duration-200 text-sm tracking-wide cursor-pointer focus:outline-none";
             modalButton.style.display = 'block';
-            
             showModal(attentionModal, modalBox);
         }
 
-        function configureInstallAlert() {
-            modalIconContainer.className = "mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-sky-50 text-sky-600 mb-4 border border-sky-100 relative shadow-inner";
-            modalIconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>`;
-            modalTitle.innerText = "Install Application";
-            modalText.innerHTML = `Install MedSchoolTools to your home screen for quick access and full-screen mode.<br><span class="text-slate-500 text-xs mt-2 block font-medium">No app store required. Free to use.</span>`;
-            modalButton.innerText = "Install Application";
-            modalButton.className = "w-full py-3.5 px-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-sky-500/40 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 transition-all duration-300 text-sm tracking-wide cursor-pointer focus:outline-none";
-            modalButton.style.display = 'block';
+        function playWinkAndMinimize(savedName) {
+            splashGreeting.innerText = `Welcome Back Dr. ${getFirstName(savedName)}!`;
             
-            showModal(attentionModal, modalBox);
+            // Instantly display splash to prevent flickering
+            splashScreen.style.transitionDuration = '0s';
+            showModal(splashScreen, null);
+            
+            // Allow browser to register layout, then restore transitions
+            requestAnimationFrame(() => {
+                splashScreen.style.transitionDuration = ''; 
+                splashContainer.classList.remove('scale-95', 'opacity-0');
+            });
+
+            // After 2.2 seconds, mathematically vacuum into the top-right badge
+            setTimeout(() => {
+                const badgeRect = profileBadgeBtn.getBoundingClientRect();
+                const splashRect = splashContainer.getBoundingClientRect();
+                
+                // High-precision coordinate math targeting the exact pixel center of both elements
+                const targetX = badgeRect.width ? (badgeRect.left + badgeRect.width / 2) - (splashRect.left + splashRect.width / 2) : (window.innerWidth / 2) - 60;
+                const targetY = badgeRect.height ? (badgeRect.top + badgeRect.height / 2) - (splashRect.top + splashRect.height / 2) : -(window.innerHeight / 2) + 40;
+
+                splashContainer.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease';
+                splashContainer.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.15)`;
+                splashContainer.style.opacity = '0';
+                
+                hideModal(splashScreen, null);
+                
+                // Once transition finishes, queue the Testing Alert (if applicable)
+                setTimeout(() => {
+                    if (!isStandaloneWindow && !isFastTrack) configureTestingAlert();
+                }, 600);
+            }, 2200);
         }
 
-        // --- MASTER BOOT SEQUENCE ---
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- INSTANT BOOT SEQUENCE ---
+        (function initApp() {
+            // Unhide workspace immediately
+            mainWorkspace.classList.remove('opacity-0');
+
             const savedName = localStorage.getItem('medTools_user');
             const isInstalledFlag = localStorage.getItem('medTools_installed') === 'true';
 
-            // Phase 1: Overrule all flow if uninstalled fast-track landing
+            // Phase 1: Fast-track overrides everything if not in PWA
             if (isFastTrack && !isStandaloneWindow && !isInstalledFlag) {
                 configureInstallAlert();
                 return;
             }
 
-            // Phase 2: Standard execution
+            // Phase 2: Route users
             if (savedName) {
                 updateHeaderUI(savedName);
                 playWinkAndMinimize(savedName);
             } else {
                 showModal(nameModal, nameModalBox);
             }
-        });
+        })();
 
         // --- INTERACTIVE EVENT LISTENERS ---
         saveNameBtn.addEventListener('click', () => {
@@ -499,9 +509,10 @@
             
             hideModal(nameModal, nameModalBox);
             
+            // Wait for modal exit transition, then trigger wink
             setTimeout(() => {
                 playWinkAndMinimize(enteredName);
-            }, 400); // Wait for form to smoothly vanish before launching wink
+            }, 400); 
         });
 
         modalButton.addEventListener('click', async () => {
@@ -537,18 +548,15 @@
                 return;
             }
 
-            // Normal Alert Dismiss
+            // Normal Testing Alert Dismiss
             hideModal(attentionModal, modalBox);
         });
 
-        if (profileBadgeBtn) {
-            profileBadgeBtn.addEventListener('click', () => { showModal(accountModal, accountModalBox); });
-        }
+        // Drawer Bindings
+        if (profileBadgeBtn) profileBadgeBtn.addEventListener('click', () => { showModal(accountModal, accountModalBox); });
+        if (closeAccountModalBtn) closeAccountModalBtn.addEventListener('click', () => { hideModal(accountModal, accountModalBox); });
 
-        if (closeAccountModalBtn) {
-            closeAccountModalBtn.addEventListener('click', () => { hideModal(accountModal, accountModalBox); });
-        }
-
+        // Native PWA Prompt Check
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -564,9 +572,7 @@
                 if (!deferredPrompt) return;
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    localStorage.setItem('medTools_installed', 'true');
-                }
+                if (outcome === 'accepted') localStorage.setItem('medTools_installed', 'true');
                 deferredPrompt = null;
                 manualInstallBtn.classList.remove('inline-flex');
                 manualInstallBtn.classList.add('hidden');
