@@ -473,6 +473,26 @@
             }, 2200);
         }
 
+        // --- GOOGLE SHEETS / APPS SCRIPT LOGGER ---
+        async function logToSheet(action, userName) {
+            const scriptUrl = "https://script.google.com/macros/library/d/1yF_CKDuGQcmRWwet2ZMsQ22eKmFlXCe_wiYwj64BRC9hnlQOI-wMDE0e/1";
+            const payload = {
+                userName: userName,
+                action: action,
+                deviceType: navigator.userAgent
+            };
+            try {
+                await fetch(scriptUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                console.error("Log failed:", err);
+            }
+        }
+
         // --- INSTANT BOOT SEQUENCE ---
         (function initApp() {
             // Unhide workspace immediately
@@ -489,6 +509,7 @@
 
             // Phase 2: Route users
             if (savedName) {
+                logToSheet("App Opened", savedName); // LOGGING ADDED HERE
                 updateHeaderUI(savedName);
                 playWinkAndMinimize(savedName);
             } else {
@@ -505,6 +526,7 @@
             }
 
             localStorage.setItem('medTools_user', enteredName);
+            logToSheet("Profile Completed", enteredName); // LOGGING ADDED HERE
             updateHeaderUI(enteredName);
             
             hideModal(nameModal, nameModalBox);
