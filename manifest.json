@@ -3,7 +3,7 @@
   "short_name": "MedTools",
   "description": "Interactive Medical Education Suite by Rishu Tiwari",
   "start_url": "./index.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#f8fafc",
   "theme-color": "#0ea5e9",
   "orientation": "portrait",
