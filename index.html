@@ -540,7 +540,7 @@
         });
 
         modalButton.addEventListener('click', async () => {
-            if (modalTitle.innerText === "Install Application") {
+            if (modalTitle.innerText === "Install MedTools") {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
                     const { outcome } = await deferredPrompt.userChoice;
