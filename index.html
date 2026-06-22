@@ -473,25 +473,27 @@
             }, 2200);
         }
 
-        // --- GOOGLE SHEETS / APPS SCRIPT LOGGER ---
+                // --- GOOGLE SHEETS / APPS SCRIPT LOGGER ---
         async function logToSheet(action, userName) {
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbz_M2jvAFmqrhpwZhRfirTrR-27oCIqyai_U7n6gypa/dev";
-            const payload = {
-                userName: userName,
-                action: action,
-                deviceType: navigator.userAgent
-            };
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbxTi3iZj-VciNFJ-7nF_zpbVrA66OyArO36kQrORguyKNcCSxdRROX2JjLjOztUa8CRyw/exec"; // Ensure your URL is here
+            
+            // Package the data securely into the URL
+            const urlWithParams = new URL(scriptUrl);
+            urlWithParams.searchParams.append("action", action);
+            urlWithParams.searchParams.append("userName", userName);
+            urlWithParams.searchParams.append("deviceType", navigator.userAgent);
+
             try {
-                await fetch(scriptUrl, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
+                // A GET request perfectly bypasses all browser payload stripping
+                await fetch(urlWithParams.toString(), {
+                    method: "GET",
+                    mode: "no-cors"
                 });
             } catch (err) {
                 console.error("Log failed:", err);
             }
         }
+
 
         // --- INSTANT BOOT SEQUENCE ---
         (function initApp() {
